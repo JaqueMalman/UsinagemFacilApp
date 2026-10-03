@@ -60,3 +60,5 @@ REVISÃO GERAL v1.12
 
 
 v1.14 - Sanitizacao centralizada de entradas numericas em safety-limits.js; calculadoras usam sanitizeInput antes das formulas; protecao contra NaN/Infinity e entradas invalidas; cache PWA v1.14.
+
+v1.16 - Correções do code review: páginas com parâmetros (?calc=, detalhe de rosca) funcionam offline; entradas no padrão brasileiro (1.000 / 1.000,5) não são mais truncadas e caracteres inválidos são recusados; resultado e alerta anteriores são limpos quando a entrada é inválida; conversões aceitam frações mistas (1 1/2) e recusam campo vazio; sem recarga automática na primeira visita; alerta de RPM mostra o limite configurado; cache PWA v1.16.

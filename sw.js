@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.15`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.16`;
 
 const STATIC_FILES = [
   './',
@@ -71,7 +71,9 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    // Navegações ignoram a query string: fresamento.html?calc=rpm e
+    // detalhe-rosca.html?passo=... usam o mesmo HTML pré-cacheado.
+    caches.match(event.request, { ignoreSearch: event.request.mode === 'navigate' }).then(cached => {
       if (cached) return cached;
 
       return fetch(event.request).then(response => {

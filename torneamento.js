@@ -60,6 +60,14 @@ function renderTurning(){
   document.querySelector('#doTurningCalc').onclick = calculateTurning;
 }
 
+function showTurningError(message){
+  document.querySelector('#turningError').textContent = message;
+  const result = document.querySelector('#turningResult');
+  result.classList.add('empty');
+  result.querySelector('strong').textContent = '—';
+  window.UsinagemSafety?.render(document.querySelector('#turningSafetyAlert'), null);
+}
+
 function calculateTurning(){
   const d = turningDefs[turningMode];
   const vals = {};
@@ -67,13 +75,13 @@ function calculateTurning(){
   for(const [id] of d.fields){
     vals[id] = tNum(document.querySelector('#turn-'+id).value);
     if(!Number.isFinite(vals[id]) || vals[id] <= 0){
-      error.textContent = 'Preencha todos os campos com valores maiores que zero.';
+      showTurningError('Preencha todos os campos com valores maiores que zero.');
       return;
     }
   }
   const out = d.calc(vals);
   if(!Number.isFinite(out)){
-    error.textContent = 'Não foi possível calcular. Confira os valores.';
+    showTurningError('Não foi possível calcular. Confira os valores.');
     return;
   }
   error.textContent = '';

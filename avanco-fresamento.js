@@ -14,7 +14,13 @@ picker.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>
 document.querySelector('#dontKnow').onclick=()=>{help.hidden=!help.hidden;};
 document.querySelector('#calculateFeed').onclick=()=>{
   const n=number(document.querySelector('#rpm').value), fz=number(document.querySelector('#fz').value);
-  if(!Number.isFinite(n)||n<=0||!Number.isFinite(fz)||fz<=0){error.textContent='Preencha RPM e avanço por faca com valores maiores que zero.';return;}
+  if(!Number.isFinite(n)||n<=0||!Number.isFinite(fz)||fz<=0){
+    error.textContent='Preencha RPM e avanço por faca com valores maiores que zero.';
+    result.classList.add('empty'); result.querySelector('strong').textContent='—';
+    document.querySelector('#feedSummary').textContent='Preencha os dados acima.';
+    window.UsinagemSafety?.render(document.querySelector('#feedSafetyAlert'), null);
+    return;
+  }
   const vf=n*z*fz; error.textContent=''; result.classList.remove('empty');
   window.UsinagemSafety?.render(document.querySelector('#feedSafetyAlert'), window.UsinagemSafety?.rpmMessage(n));
   result.querySelector('strong').textContent=br(vf);

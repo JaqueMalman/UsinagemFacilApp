@@ -42,10 +42,15 @@ function render(){
   formulaBox.hidden=true; toggleFormula.textContent='ⓘ Ver como foi calculado';
   document.querySelector('#doCalc').onclick=calculate;
 }
+function showError(msg){
+  document.querySelector('#calcError').textContent=msg;
+  const box=document.querySelector('#result'); box.classList.add('empty'); box.querySelector('strong').textContent='—';
+  window.UsinagemSafety?.render(document.querySelector('#safetyAlert'), null);
+}
 function calculate(){
   const d=defs[mode], vals={}, error=document.querySelector('#calcError');
-  for(const [id] of d.fields){ vals[id]=num(document.querySelector('#'+id).value); if(!Number.isFinite(vals[id]) || vals[id]<=0){ error.textContent='Preencha todos os campos com valores maiores que zero.'; return; }}
-  const out=d.calc(vals); if(!Number.isFinite(out)){ error.textContent='Não foi possível calcular. Confira os valores.'; return; }
+  for(const [id] of d.fields){ vals[id]=num(document.querySelector('#'+id).value); if(!Number.isFinite(vals[id]) || vals[id]<=0){ showError('Preencha todos os campos com valores maiores que zero.'); return; }}
+  const out=d.calc(vals); if(!Number.isFinite(out)){ showError('Não foi possível calcular. Confira os valores.'); return; }
   error.textContent=''; const box=document.querySelector('#result'); box.classList.remove('empty');
   box.querySelector('strong').textContent=format(out,d.decimals);
   const rpm = mode === 'rpm' ? out : vals.n;
