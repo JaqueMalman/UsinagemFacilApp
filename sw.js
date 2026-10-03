@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.16`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.17`;
 
 const STATIC_FILES = [
   './',
@@ -18,7 +18,6 @@ const STATIC_FILES = [
   './auditoria-tecnica.js',
   './styles.css',
   './app.js',
-  './performance-utils.js',
   './roscas.js',
   './detalhe-rosca.js',
   './fresamento.js',
@@ -30,10 +29,15 @@ const STATIC_FILES = [
   './data.js',
   './technical-data.js',
   './sw-register.js',
-  './haptics.js',
-  './user-history.js',
   './calculator-history.js',
-  './safety-limits.js',
+  './js/lib/text.js',
+  './js/lib/numbers.js',
+  './js/lib/formulas.js',
+  './js/lib/haptics.js',
+  './js/lib/safety.js',
+  './js/lib/history.js',
+  './js/lib/threads.js',
+  './js/lib/calculator.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

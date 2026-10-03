@@ -1,14 +1,54 @@
-const modes=[...document.querySelectorAll('.conversion-mode')], input=document.querySelector('#conversionInput'), inputTitle=document.querySelector('#inputTitle'), inputHelp=document.querySelector('#inputHelp'), inputUnit=document.querySelector('#inputUnit'), result=document.querySelector('#conversionResult'), resultUnit=document.querySelector('#resultUnit'), resultExtra=document.querySelector('#resultExtra'), error=document.querySelector('#conversionError'), formulaText=document.querySelector('#formulaText');
-let mode='in-mm';
-const fractions=['1/16','1/8','3/16','1/4','5/16','3/8','7/16','1/2','9/16','5/8','11/16','3/4','7/8','1'];
-const grid=document.querySelector('#fractionGrid');
-// Aceita decimal (0,5), fração (1/2) e fração mista (1 1/2 ou 1-1/2), com ou sem aspas.
-function parseInch(v){v=v.trim().replace(/[″"”]/g,'').replace(/,/g,'.').trim(); if(!v)return NaN; const m=v.match(/^(?:(\d+)[\s-]+)?(\d+)\/(\d+)$/); if(m){const den=Number(m[3]); return den?Number(m[1]||0)+Number(m[2])/den:NaN;} return /^(\d+\.?\d*|\.\d+)$/.test(v)?Number(v):NaN;}
-// Em mm o ponto é sempre decimal (12.700 = 12,7 mm), como indica o texto de ajuda.
-function parseMm(v){v=v.trim().replace(/\s*mm$/i,'').replace(',','.'); return /^(\d+\.?\d*|\.\d+)$/.test(v)?Number(v):NaN;}
-function fmt(n,d=3){return n.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:d})}
-function nearestFraction(inches){let best=null,diff=Infinity; for(let den of [2,4,8,16,32,64]){let num=Math.round(inches*den),x=num/den,di=Math.abs(x-inches); if(di<diff){diff=di;best=[num,den]}} if(diff>0.0008||!best)return null; let [n,d]=best; const gcd=(a,b)=>b?gcd(b,a%b):a,g=gcd(n,d);n/=g;d/=g; if(d===1)return `${n}″`; const whole=Math.floor(n/d),rem=n%d; return whole?`${whole} ${rem}/${d}″`:`${rem}/${d}″`;}
-function renderFractions(){grid.innerHTML=fractions.map(f=>`<button data-f="${f}"><b>${f}″</b><small>${fmt(parseInch(f)*25.4,2)} mm</small></button>`).join(''); grid.querySelectorAll('button').forEach(b=>b.onclick=()=>{mode='in-mm';setMode();input.value=b.dataset.f;convert();window.scrollTo({top:220,behavior:'smooth'})})}
-function setMode(){modes.forEach(b=>b.classList.toggle('active',b.dataset.mode===mode)); input.value=''; error.textContent=''; result.classList.add('empty');result.querySelector('strong').textContent='—'; if(mode==='in-mm'){inputTitle.textContent='Digite a medida em polegada';inputHelp.textContent='Aceita frações como 1/2, 3/8 e também decimal.';input.placeholder='Ex.: 1/2';inputUnit.textContent='pol';resultUnit.textContent='mm';resultExtra.textContent='Digite uma medida acima.';formulaText.textContent='mm = polegada × 25,4';}else{inputTitle.textContent='Digite a medida em milímetros';inputHelp.textContent='Use vírgula ou ponto. Ex.: 12,7';input.placeholder='Ex.: 12,7';inputUnit.textContent='mm';resultUnit.textContent='pol';resultExtra.textContent='Digite uma medida acima.';formulaText.textContent='polegada = mm ÷ 25,4';}}
-function convert(){error.textContent=''; let v=mode==='in-mm'?parseInch(input.value):parseMm(input.value); if(!Number.isFinite(v)||v<=0){error.textContent='Digite uma medida válida.';result.classList.add('empty');result.querySelector('strong').textContent='—';resultExtra.textContent='Digite uma medida acima.';return} result.classList.remove('empty'); if(mode==='in-mm'){let mm=v*25.4;result.querySelector('strong').textContent=fmt(mm,3);resultUnit.textContent='mm';resultExtra.textContent=`${input.value.trim().replace(/[″"”]/g,'')}″ corresponde a ${fmt(mm,3)} mm.`;}else{let inch=v/25.4, frac=nearestFraction(inch);result.querySelector('strong').textContent=fmt(inch,5);resultUnit.textContent='pol';resultExtra.textContent=frac?`Fração equivalente: ${frac}`:'Não coincide exatamente com uma fração comum até 1/64″.';}}
-modes.forEach(b=>b.onclick=()=>{mode=b.dataset.mode;setMode()});document.querySelector('#convertBtn').onclick=convert;input.addEventListener('keydown',e=>{if(e.key==='Enter')convert()});document.querySelector('#toggleFormula').onclick=()=>document.querySelector('#formulaBox').classList.toggle('is-hidden');renderFractions();
+import { parseInch, parseMillimeters, nearestFraction, formatNumber } from './js/lib/numbers.js';
+
+const $ = s => document.querySelector(s);
+const modes = [...document.querySelectorAll('.conversion-mode')];
+const input = $('#conversionInput'), inputTitle = $('#inputTitle'), inputHelp = $('#inputHelp'), inputUnit = $('#inputUnit');
+const result = $('#conversionResult'), resultUnit = $('#resultUnit'), resultExtra = $('#resultExtra');
+const error = $('#conversionError'), formulaText = $('#formulaText'), grid = $('#fractionGrid');
+const fractions = ['1/16','1/8','3/16','1/4','5/16','3/8','7/16','1/2','9/16','5/8','11/16','3/4','7/8','1'];
+const MODES = {
+  'in-mm': { title:'Digite a medida em polegada', help:'Aceita frações como 1/2, 3/8 e também decimal.', placeholder:'Ex.: 1/2', from:'pol', to:'mm', formula:'mm = polegada × 25,4' },
+  'mm-in': { title:'Digite a medida em milímetros', help:'Use vírgula ou ponto. Ex.: 12,7', placeholder:'Ex.: 12,7', from:'mm', to:'pol', formula:'polegada = mm ÷ 25,4' }
+};
+let mode = 'in-mm';
+
+function clearResult() {
+  result.classList.add('empty');
+  result.querySelector('strong').textContent = '—';
+  resultExtra.textContent = 'Digite uma medida acima.';
+}
+
+function setMode() {
+  const m = MODES[mode];
+  modes.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  input.value = ''; error.textContent = '';
+  inputTitle.textContent = m.title; inputHelp.textContent = m.help; input.placeholder = m.placeholder;
+  inputUnit.textContent = m.from; resultUnit.textContent = m.to; formulaText.textContent = m.formula;
+  clearResult();
+}
+
+function convert() {
+  error.textContent = '';
+  const v = mode === 'in-mm' ? parseInch(input.value) : parseMillimeters(input.value);
+  if (!Number.isFinite(v) || v <= 0) { error.textContent = 'Digite uma medida válida.'; clearResult(); return; }
+  result.classList.remove('empty');
+  if (mode === 'in-mm') {
+    const mm = v * 25.4;
+    result.querySelector('strong').textContent = formatNumber(mm, 3);
+    resultExtra.textContent = `${input.value.trim().replace(/[″"”]/g, '')}″ corresponde a ${formatNumber(mm, 3)} mm.`;
+  } else {
+    const inch = v / 25.4, frac = nearestFraction(inch);
+    result.querySelector('strong').textContent = formatNumber(inch, 5);
+    resultExtra.textContent = frac ? `Fração equivalente: ${frac}` : 'Não coincide exatamente com uma fração comum até 1/64″.';
+  }
+}
+
+grid.innerHTML = fractions.map(f => `<button data-f="${f}" type="button"><b>${f}″</b><small>${formatNumber(parseInch(f) * 25.4, 2)} mm</small></button>`).join('');
+grid.querySelectorAll('button').forEach(b => b.onclick = () => {
+  mode = 'in-mm'; setMode(); input.value = b.dataset.f; convert();
+  window.scrollTo({ top: 220, behavior: 'smooth' });
+});
+modes.forEach(b => b.onclick = () => { mode = b.dataset.mode; setMode(); });
+$('#convertBtn').onclick = convert;
+input.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
+$('#toggleFormula').onclick = () => $('#formulaBox').classList.toggle('is-hidden');

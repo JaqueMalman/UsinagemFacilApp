@@ -1,3 +1,5 @@
+import { normalizeSearch, debounce } from './js/lib/text.js';
+
 const topics={
 rpm:{icon:'⚙️',title:'O que é RPM?',simple:'RPM é quantas voltas acontecem em 1 minuto.',visual:'↻  ↻  ↻',example:'1.000 RPM = 1.000 voltas por minuto.',tip:'No fresamento, normalmente observamos o diâmetro da ferramenta. No torneamento, o diâmetro da peça.',technical:'Na tabela técnica: n = Vc × 1000 ÷ (π × D). No fresamento, D é o diâmetro da ferramenta (Dc); no torneamento, é o diâmetro da peça.'},
 vc:{icon:'🏎️',title:'Velocidade de corte (Vc)',simple:'É a velocidade com que o corte acontece na superfície da peça ou ferramenta.',visual:'CUT → → →',example:'Ela é informada em m/min.',tip:'Não confunda velocidade de corte com RPM: uma é velocidade linear; a outra é quantidade de voltas.',technical:'Na tabela técnica: Vc = π × D × n ÷ 1000.'},
@@ -10,4 +12,16 @@ polegada:{icon:'½″',title:'Como ler polegadas?',simple:'Polegadas podem apare
 const grid=document.getElementById('learnGrid'), search=document.getElementById('learnSearch'), clear=document.getElementById('learnClear'), sheet=document.getElementById('learnSheet'), content=document.getElementById('learnContent'), empty=document.getElementById('learnEmpty');
 function openTopic(k){const t=topics[k];if(!t)return;content.innerHTML=`<div class="learn-big-icon">${t.icon}</div><div class="eyebrow">EXPLICAÇÃO SIMPLES</div><h2>${t.title}</h2><p class="learn-simple">${t.simple}</p><div class="learn-visual">${t.visual}</div><div class="learn-example"><small>EXEMPLO</small><strong>${t.example}</strong></div><div class="learn-tip"><span>💡</span><p>${t.tip}</p></div><details class="formula-box"><summary>ⓘ Ver parte técnica</summary><p>${t.technical}</p></details>`;sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');}
 grid.addEventListener('click',e=>{const b=e.target.closest('[data-topic]');if(b)openTopic(b.dataset.topic)});function closeSheet(){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true')}document.getElementById('learnClose').onclick=closeSheet;document.getElementById('learnBackdrop').onclick=closeSheet;
-search.addEventListener('input',window.UFPerformance ? UFPerformance.debounce(()=>{const q=search.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();clear.style.visibility=q?'visible':'hidden';let shown=0;grid.querySelectorAll('.learn-card').forEach(b=>{const s=(b.innerText+' '+b.dataset.keywords).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const ok=!q||s.includes(q);b.classList.toggle('is-hidden',!ok);if(ok)shown++});empty.classList.toggle('is-hidden',shown>0)}, 100) : ()=>{const q=search.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();clear.style.visibility=q?'visible':'hidden';let shown=0;grid.querySelectorAll('.learn-card').forEach(b=>{const s=(b.innerText+' '+b.dataset.keywords).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const ok=!q||s.includes(q);b.classList.toggle('is-hidden',!ok);if(ok)shown++});empty.classList.toggle('is-hidden',shown>0)});clear.onclick=()=>{search.value='';search.dispatchEvent(new Event('input'));search.focus()};
+function filterTopics(){
+  const q = normalizeSearch(search.value).trim();
+  clear.style.visibility = q ? 'visible' : 'hidden';
+  let shown = 0;
+  grid.querySelectorAll('.learn-card').forEach(b => {
+    const ok = !q || normalizeSearch(b.innerText + ' ' + b.dataset.keywords).includes(q);
+    b.classList.toggle('is-hidden', !ok);
+    if(ok) shown++;
+  });
+  empty.classList.toggle('is-hidden', shown > 0);
+}
+search.addEventListener('input', debounce(filterTopics, 100));
+clear.onclick = () => { search.value = ''; filterTopics(); search.focus(); };

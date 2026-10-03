@@ -62,3 +62,11 @@ REVISÃO GERAL v1.12
 v1.14 - Sanitizacao centralizada de entradas numericas em safety-limits.js; calculadoras usam sanitizeInput antes das formulas; protecao contra NaN/Infinity e entradas invalidas; cache PWA v1.14.
 
 v1.16 - Correções do code review: páginas com parâmetros (?calc=, detalhe de rosca) funcionam offline; entradas no padrão brasileiro (1.000 / 1.000,5) não são mais truncadas e caracteres inválidos são recusados; resultado e alerta anteriores são limpos quando a entrada é inválida; conversões aceitam frações mistas (1 1/2) e recusam campo vazio; sem recarga automática na primeira visita; alerta de RPM mostra o limite configurado; cache PWA v1.16.
+
+v1.17 - Estrutura em ES modules e testes
+- Código compartilhado em js/lib/: text (busca), numbers (leitura/formatação), formulas, safety (alerta de RPM), history (favoritos/recentes), threads, calculator (motor das calculadoras de fresamento e torneamento) e haptics.
+- Scripts das páginas carregados com type="module": sem variáveis globais que possam colidir. technical-data.js, data.js e sw-register.js continuam scripts clássicos.
+- ES modules exigem servidor (HTTPS ou localhost), como o modo offline. Abrir os .html direto pelo sistema de arquivos não funciona mais.
+- Avanço por faca agora mostra o alerta de RPM (faltava o espaço do alerta na página).
+- Testes: "npm test" roda os testes unitários (node --test, sem dependências); "npm run test:smoke" abre todas as páginas no Chrome headless e lista o que cada uma mostra.
+- Cache PWA v1.17.
