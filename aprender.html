@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#102638" name="theme-color"/>
+<meta content="Usinagem Fácil" name="application-name"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/><title>Aprender — Usinagem Fácil</title><link href="styles.css" rel="stylesheet"/></head><body>
+<header class="topbar"><div class="brand"><a aria-label="Voltar" class="back-link" href="index.html">‹</a><div><strong>USINAGEM <span>FÁCIL</span></strong><small>APRENDER</small></div></div><a aria-label="Início" class="icon-button table-home" href="index.html">⌂</a></header>
+<main class="learn-main">
+<section class="learn-hero"><div class="eyebrow">💡 APRENDER</div><h1>Entenda sem complicação</h1><p>Escolha um assunto. Primeiro mostramos com desenho e exemplo. A parte técnica fica por último.</p><div class="search-box learn-search"><span>⌕</span><input id="learnSearch" placeholder="Ex.: RPM, avanço, rosca, diâmetro" type="search"/><button aria-label="Limpar" id="learnClear" type="button">×</button></div></section>
+<section class="section"><div class="section-heading"><h2>O que você quer entender?</h2><span>Toque em um assunto</span></div><div class="learn-grid" id="learnGrid">
+<button class="learn-card" data-keywords="rpm rotação rotacao giro" data-topic="rpm" type="button"><span class="learn-icon">⚙️</span><span><b>O que é RPM?</b><small>Quantas voltas acontecem em 1 minuto.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="velocidade corte vc" data-topic="vc" type="button"><span class="learn-icon">🏎️</span><span><b>Velocidade de corte</b><small>Velocidade do corte na superfície.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="avanço avanco f mm rot" data-topic="avanco" type="button"><span class="learn-icon">➡️</span><span><b>O que é avanço?</b><small>Quanto a ferramenta ou peça avança.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="avanço por faca fz dente facas" data-topic="fz" type="button"><span class="learn-icon">🦷</span><span><b>Avanço por faca</b><small>Quanto cada dente avança no corte.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="rosca passo m10 métrica metrica" data-topic="rosca" type="button"><span class="learn-icon">🔩</span><span><b>Como entender uma rosca?</b><small>Veja o que significam M10 × 1,5.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="diâmetro diametro ferramenta peça peca dc d" data-topic="diametro" type="button"><span class="learn-icon">📏</span><span><b>O que é diâmetro?</b><small>Onde medir ferramenta e peça.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="facas dentes fresa numero z" data-topic="facas" type="button"><span class="learn-icon">🔢</span><span><b>Número de facas</b><small>Como contar os dentes da fresa.</small></span><strong>›</strong></button>
+<button class="learn-card" data-keywords="polegada fração fracao milimetro mm" data-topic="polegada" type="button"><span class="learn-icon">½″</span><span><b>Como ler polegadas?</b><small>Entenda 1/2”, 3/8”, 1/4”...</small></span><strong>›</strong></button>
+</div><div class="empty-state is-hidden" id="learnEmpty"><b>Nenhum assunto encontrado.</b><p>Tente “RPM”, “rosca”, “avanço” ou “polegada”.</p></div></section>
+<section class="help-card"><div class="help-icon">!</div><div><b>Aprender não é escolher parâmetro de corte</b><p>Os exemplos ajudam a entender os conceitos. Valores de corte e avanço devem vir do processo, ferramenta ou catálogo utilizado.</p></div></section>
+</main>
+<div aria-hidden="true" class="learn-sheet" id="learnSheet"><button aria-label="Fechar" class="sheet-backdrop" id="learnBackdrop" type="button"></button><article class="learn-sheet-card"><div class="sheet-handle"></div><button aria-label="Fechar" class="sheet-close" id="learnClose" type="button">×</button><div id="learnContent"></div></article></div>
+<nav class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a aria-current="page" class="active" href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
+<script defer="" src="performance-utils.js"></script><script defer="" src="aprender.js"></script> <script defer="" src="haptics.js"></script>
+<script defer="" src="sw-register.js"></script>
+</body></html>

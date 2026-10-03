@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#102638" name="theme-color"/>
+<meta content="Usinagem Fácil" name="application-name"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
+<title>Usinagem Fácil — Roscas</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div>
+<a aria-label="Voltar ao início" class="icon-button back-link" href="index.html">‹</a>
+</header>
+<main>
+<section class="welcome thread-welcome">
+<div class="eyebrow">🔩 ROSCAS</div>
+<h1>Qual rosca você está usando?</h1>
+<p>Escolha o tipo ou digite a medida. Exemplo: <b>M10 x 1,5</b>.</p>
+<div class="search-box"><span>⌕</span><input autocomplete="off" id="threadSearch" placeholder="Ex.: M10 x 1,5" type="search"/><button aria-label="Limpar" id="clearThread" type="button">×</button></div>
+<div aria-live="polite" class="search-feedback" id="threadFeedback"></div>
+</section>
+<section class="section saved-threads" hidden="" id="savedThreads">
+<div class="section-heading"><h2>⭐ Favoritos e recentes</h2><span>Atalhos neste aparelho</span></div>
+<div class="saved-chip-list" id="savedThreadList"></div>
+</section>
+<section class="section">
+<div class="section-heading"><h2>1. Escolha o tipo de rosca</h2><span>Toque em uma opção</span></div>
+<div class="thread-types" id="threadTypes">
+<button class="thread-type active" data-filter="M Rosca ISO Métrica Grossa 60°" type="button"><span class="thread-badge">M</span><span><b>Métrica grossa</b><small>Rosca ISO métrica • 60°</small></span></button>
+<button class="thread-type" data-filter="M Rosca ISO Métrica Fina" type="button"><span class="thread-badge">M</span><span><b>Métrica fina</b><small>Passos menores</small></span></button>
+<button class="thread-type" data-filter="Rosca UNC / Grossa 60°" type="button"><span class="thread-badge">UNC</span><span><b>UNC</b><small>Polegada • rosca grossa • 60°</small></span></button>
+<button class="thread-type" data-filter="Rosca UNF / Fina 60°" type="button"><span class="thread-badge">UNF</span><span><b>UNF</b><small>Estrutura pronta • brocas pendentes</small></span></button>
+<button class="thread-type" data-filter="Rosca BSW / Whitworth 55°" type="button"><span class="thread-badge">BSW</span><span><b>BSW</b><small>Preparada para validação manual</small></span></button>
+<button class="thread-type" data-filter="Rosca BSP Paralela / G 55°" type="button"><span class="thread-badge">BSP</span><span><b>BSP</b><small>Estrutura threadlib • brocas pendentes</small></span></button>
+<button class="thread-type" data-filter="Rosca NPT / Cônica 60°" type="button"><span class="thread-badge">NPT</span><span><b>NPT</b><small>Preparada para validação manual</small></span></button>
+</div>
+</section>
+<section class="section thread-results-section">
+<div class="section-heading"><h2>2. Escolha a medida</h2><span id="resultCount"></span></div>
+<div class="thread-results" id="threadResults"></div>
+<div class="empty-state" hidden="" id="emptyThread"><b>Nenhuma medida encontrada.</b><p>Confira a digitação ou escolha outro tipo de rosca.</p></div>
+</section>
+<section class="help-card"><div class="help-icon">?</div><div><b>Não sabe o que significa o passo?</b><p>Na medida <strong>M10 × 1,5</strong>, M10 é o diâmetro nominal e 1,5 mm é o passo entre os filetes. Toque em uma medida para abrir o detalhe ilustrado e ver a broca indicada.</p></div></section>
+</main>
+<div aria-hidden="true" class="thread-sheet" id="threadSheet">
+<button aria-label="Fechar" class="sheet-backdrop" id="sheetBackdrop" type="button"></button>
+<section aria-labelledby="sheetTitle" aria-modal="true" class="sheet-card" role="dialog">
+<div class="sheet-handle"></div><button aria-label="Fechar" class="sheet-close" id="sheetClose" type="button">×</button>
+<div class="sheet-icon">🔩</div><div class="sheet-kicker" id="sheetType"></div><h2 id="sheetTitle"></h2>
+<div aria-hidden="true" class="thread-diagram"><div class="drill-shape">↧</div><div class="metal-block"><div class="hole"></div></div></div>
+<p class="instruction">Para preparar o furo antes de fazer esta rosca:</p>
+<div aria-live="polite" aria-atomic="true" class="drill-result"><small>USE A BROCA</small><strong id="sheetDrill"></strong><span>mm</span></div>
+<div class="steps"><div><span>1</span><p><b>Faça o furo</b><br/><small id="stepDrill"></small></p></div><div><span>2</span><p><b>Faça a rosca</b><br/><small id="stepThread"></small></p></div></div>
+<p class="source-note">Valor conforme a tabela técnica cadastrada no aplicativo.</p>
+</section>
+</div>
+<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a aria-current="page" class="active" href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
+<script defer="" src="technical-data.js"></script><script defer="" src="data.js"></script><script defer="" src="user-history.js"></script><script defer="" src="performance-utils.js"></script><script defer="" src="roscas.js"></script>
+<script defer="" src="haptics.js"></script>
+<script defer="" src="sw-register.js"></script>
+</body></html>

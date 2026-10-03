@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#102638" name="theme-color"/>
+<meta content="Usinagem Fácil" name="application-name"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
+<title>Usinagem Fácil — Fresamento</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div>
+<a aria-label="Voltar ao início" class="icon-button back-link" href="index.html">‹</a>
+</header>
+<main class="milling-main">
+<section class="milling-hero">
+<div class="eyebrow">⚙️ FRESAMENTO</div>
+<h1>O que você quer descobrir?</h1>
+<p>Escolha uma conta. Mostraremos somente os dados necessários.</p>
+<div aria-label="Ilustração de uma fresa usinando uma peça" class="milling-visual">
+<div class="cutter"><span></span><span></span><span></span><span></span></div>
+<div class="cut-arrow">↻</div>
+<div class="workpiece"></div>
+<div class="feed-arrow">AVANÇO →</div>
+</div>
+</section>
+<section class="section">
+<div class="section-heading"><h2>Escolha o cálculo</h2><span>1 toque</span></div>
+<div class="milling-options" id="calcOptions">
+<button class="milling-option active" data-calc="rpm" type="button"><span>⚙️</span><b>RPM</b><small>Rotação da ferramenta</small></button>
+<button class="milling-option" data-calc="vf" type="button"><span>➡️</span><b>Avanço/min</b><small>mm por minuto</small></button>
+<button class="milling-option" data-calc="fz" type="button"><span>🦷</span><b>Avanço/faca</b><small>mm por faca</small></button>
+<button class="milling-option" data-calc="vc" type="button"><span>🏎️</span><b>Veloc. corte</b><small>m por minuto</small></button>
+</div>
+</section>
+<section aria-live="polite" class="calc-simple" id="calcPanel"></section>
+<section class="feed-detail-link"><a href="avanco-fresamento.html">➡️ Abrir calculadora guiada de avanço <span>›</span></a></section>
+<section class="learn-formula">
+<button id="toggleFormula" type="button">ⓘ Ver como foi calculado</button>
+<div class="formula-box" hidden="" id="formulaBox"></div>
+</section>
+<div class="info-strip"><span>💡</span><div><b>Importante</b><p>Velocidade de corte e avanço devem vir da recomendação da ferramenta, catálogo ou processo. Esta tela faz a conta usando os valores informados por você.</p></div></div>
+</main>
+<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
+<script defer="" src="safety-limits.js"></script>
+<script defer="" src="fresamento.js"></script>
+<script defer="" src="haptics.js"></script>
+<script defer="" src="sw-register.js"></script>
+</body>
+</html>

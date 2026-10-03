@@ -1,0 +1,16 @@
+{
+  "name": "Usinagem Fácil",
+  "short_name": "Usinagem Fácil",
+  "description": "Consultas, tabelas e cálculos rápidos para operadores de usinagem, torno e CNC.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#102638",
+  "theme_color": "#102638",
+  "icons": [
+    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

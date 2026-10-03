@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#102638" name="theme-color"/>
+<meta content="Usinagem Fácil" name="application-name"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
+<title>Usinagem Fácil — Calculadoras</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div>
+<a aria-label="Voltar ao início" class="icon-button back-link" href="index.html">‹</a>
+</header>
+<main class="calculator-hub-main">
+<section class="calculator-hub-hero">
+<div class="eyebrow">🧮 CALCULADORAS</div>
+<h1>O que você quer calcular?</h1>
+<p>Você escolhe a conta e nós mostramos somente o que precisa informar.</p>
+<div aria-label="Fluxo simplificado de cálculo" class="calculator-flow">
+<div><span>1</span><b>Escolha</b><small>o cálculo</small></div><i>›</i>
+<div><span>2</span><b>Informe</b><small>os valores</small></div><i>›</i>
+<div><span>3</span><b>Veja</b><small>o resultado</small></div>
+</div>
+</section>
+<section class="section" hidden="" id="recentCalcs">
+<div class="section-heading"><h2>🕘 Consultados recentemente</h2><span>Neste aparelho</span></div>
+<div class="calculator-shortcuts recent-calcs" id="recentCalcList"></div>
+</section>
+<section class="section">
+<div class="section-heading"><h2>Operação</h2><span>Escolha primeiro</span></div>
+<div class="hub-operation-grid">
+<a class="hub-operation green" href="fresamento.html"><span class="hub-icon">⚙️</span><div><b>Fresamento / Furação</b><small>RPM, velocidade de corte e avanço</small></div><strong>›</strong></a>
+<a class="hub-operation red" href="torneamento.html"><span class="hub-icon">↻</span><div><b>Torneamento</b><small>RPM, velocidade de corte e avanço</small></div><strong>›</strong></a>
+</div>
+</section>
+<section class="section">
+<div class="section-heading"><h2>Atalhos de cálculo</h2><span>Mais usados</span></div>
+<div class="calculator-shortcuts">
+<a href="fresamento.html?calc=rpm"><span>⚙️</span><b>Descobrir RPM</b><small>Vc + diâmetro</small></a>
+<a href="fresamento.html?calc=vc"><span>🏎️</span><b>Velocidade de corte</b><small>RPM + diâmetro</small></a>
+<a href="fresamento.html?calc=vf"><span>➡️</span><b>Avanço por minuto</b><small>RPM + avanço/volta</small></a>
+<a href="avanco-fresamento.html"><span>🦷</span><b>Avanço por faca</b><small>Calculadora guiada</small></a>
+<a href="conversoes.html"><span>½″</span><b>Polegada → mm</b><small>Frações e decimais</small></a>
+<a href="conversoes.html"><span>📏</span><b>mm → polegada</b><small>Decimal e fração</small></a>
+</div>
+</section>
+<section class="calculator-help">
+<span>💡</span><div><b>Não sabe qual cálculo escolher?</b><p>Se a ferramenta gira, comece por <strong>Fresamento / Furação</strong>. Se a peça gira no torno, escolha <strong>Torneamento</strong>.</p></div>
+</section>
+<section class="calculator-safety">
+<b>⚠️ A calculadora faz a conta — não escolhe o parâmetro de corte.</b>
+<p>Velocidade de corte e avanço devem ser informados conforme ferramenta, material, catálogo ou processo utilizado.</p>
+</section>
+</main>
+<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a aria-current="page" class="active" href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
+<script defer="" src="user-history.js"></script>
+<script defer="" src="calculator-history.js"></script>
+<script defer="" src="haptics.js"></script>
+<script defer="" src="sw-register.js"></script>
+</body>
+</html>

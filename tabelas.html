@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#102638" name="theme-color"/>
+<meta content="Usinagem Fácil" name="application-name"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
+<title>Usinagem Fácil — Tabelas</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<a aria-label="Voltar" class="back-link" href="index.html">‹</a>
+<div class="brand"><div class="brand-icon">▤</div><div><strong>TABELAS <span>TÉCNICAS</span></strong><small>Consulta rápida para a máquina</small></div></div>
+<a aria-label="Início" class="icon-button table-home" href="index.html">⌂</a>
+</header>
+<div class="info-strip" style="margin:12px auto;max-width:980px"><span>✓</span><div><b>Base técnica v1.2</b><p>Roscas métricas centralizadas e rastreáveis. <a href="auditoria-tecnica.html">Ver auditoria e fontes</a>.</p></div></div><main class="tables-main">
+<section class="tables-hero">
+<div class="eyebrow">PÁGINA 10 • TABELAS</div>
+<h1>O que você quer consultar?</h1>
+<p>Escolha uma tabela ou pesquise diretamente uma medida.</p>
+<div class="search-box table-search"><span>⌕</span><input id="tableSearch" placeholder="Ex.: M10 • 1/2 • 8,5 mm" type="search"/><button aria-label="Limpar" id="clearTableSearch" type="button">×</button></div>
+</section>
+<section class="section">
+<div class="section-heading"><h2>Escolha a tabela</h2><span>Toque para abrir</span></div>
+<div class="table-type-grid" id="tableTypes">
+<button class="table-type active" data-type="metric-coarse" type="button"><span>M</span><div><b>Métrica grossa</b><small>Rosca ISO Métrica 60°</small></div></button>
+<button class="table-type" data-type="metric-fine" type="button"><span>M</span><div><b>Métrica fina</b><small>Passos finos</small></div></button>
+<button class="table-type" data-type="unc" type="button"><span>UNC</span><div><b>UNC</b><small>Unificada grossa 60°</small></div></button>
+<button class="table-type" data-type="conversion" type="button"><span>↔</span><div><b>Polegada ↔ mm</b><small>Conversão de medidas</small></div></button>
+<button class="table-type" data-type="unf" type="button"><span>UNF</span><div><b>UNF</b><small>Brocas pendentes</small></div></button>
+<button class="table-type" data-type="bsw" type="button"><span>BSW</span><div><b>BSW</b><small>Validação manual final</small></div></button>
+<button class="table-type" data-type="bsp" type="button"><span>BSP</span><div><b>BSP</b><small>Estrutura pronta • brocas pendentes</small></div></button>
+<button class="table-type" data-type="npt" type="button"><span>NPT</span><div><b>NPT</b><small>Validação manual final</small></div></button>
+</div>
+</section>
+<section class="section table-results-section">
+<div class="section-heading"><h2 id="tableTitle">Métrica grossa</h2><span id="resultCount"></span></div>
+<div class="table-column-head" id="columnHead"><span>ROSCA</span><span>BROCA</span></div>
+<div aria-live="polite" class="technical-list" id="tableResults"></div>
+<div class="empty-state is-hidden" id="tableEmpty"><b>Nenhum resultado encontrado</b><p>Tente pesquisar somente parte da medida, por exemplo “M10”.</p></div>
+</section>
+<section class="help-card tables-note">
+<div class="help-icon">!</div><div><b>Importante</b><p>Esta tela usa somente os dados já transcritos e validados no MVP. UNF, BSW, BSP e NPT serão liberadas depois da conferência completa da tabela original.</p></div>
+</section>
+</main>
+<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a aria-current="page" class="active" href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
+<script defer="" src="technical-data.js"></script><script defer="" src="data.js"></script>
+<script defer="" src="performance-utils.js"></script><script defer="" src="tabelas.js"></script>
+<script defer="" src="haptics.js"></script>
+<script defer="" src="sw-register.js"></script>
+</body>
+</html>
