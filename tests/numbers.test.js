@@ -8,6 +8,8 @@ test('parseNumberBR: vírgula decimal e ponto de milhar', () => {
   assert.equal(parseNumberBR('3.180'), 3180);
   assert.equal(parseNumberBR('1.000'), 1000);
   assert.equal(parseNumberBR('1.000,5'), 1000.5);
+  // Decisão de produto: nas calculadoras, ponto seguido de 3 dígitos é milhar.
+  assert.equal(parseNumberBR('12.700'), 12700);
   assert.equal(parseNumberBR(' 3180 '), 3180);
 });
 
