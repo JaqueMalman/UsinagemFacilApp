@@ -1,5 +1,5 @@
 // Favoritos e histórico recente, salvos só no aparelho (localStorage).
-const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1' };
+const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1', milling: 'uf_milling_history_v1' };
 const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; } };
 const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const key = t => `${t.tipo}|${t.passo}`;
@@ -39,3 +39,17 @@ export function addRecentCalc(c) {
   a.unshift({ ...c, at: Date.now() });
   write(K.recentC, a.slice(0, 6));
 }
+
+// Últimos cálculos do fresamento: { mode, inputs: { campo: texto digitado }, result, at }.
+// O mesmo cálculo repetido sobe para o topo em vez de duplicar.
+export const millingCalcs = () => read(K.milling);
+const sameCalc = (a, b) => a.mode === b.mode && JSON.stringify(a.inputs) === JSON.stringify(b.inputs);
+
+export function addMillingCalc(c) {
+  const a = read(K.milling).filter(x => !sameCalc(x, c));
+  a.unshift({ mode: c.mode, inputs: c.inputs, result: c.result, at: Date.now() });
+  write(K.milling, a.slice(0, 5));
+}
+
+export function removeMillingCalc(at) { write(K.milling, read(K.milling).filter(x => x.at !== at)); }
+export function clearMillingCalcs() { write(K.milling, []); }

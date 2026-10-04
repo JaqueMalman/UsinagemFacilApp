@@ -52,6 +52,18 @@ test('cálculos recentes limitados a 6, sem repetir o mesmo link', () => {
   assert.equal(history.recentCalcs().length, 6);
 });
 
+test('cálculos do fresamento: 5 últimos, sem repetir, excluir um e limpar', () => {
+  const calc = vc => ({ mode: 'rpm', inputs: { vc: String(vc), dc: '10' }, result: 'x' });
+  for (let i = 1; i <= 7; i++) history.addMillingCalc(calc(i));
+  assert.deepEqual(history.millingCalcs().map(c => c.inputs.vc), ['7', '6', '5', '4', '3']);
+  history.addMillingCalc(calc(5));
+  assert.deepEqual(history.millingCalcs().map(c => c.inputs.vc), ['5', '7', '6', '4', '3']);
+  history.removeMillingCalc(history.millingCalcs()[1].at);
+  assert.equal(history.millingCalcs().some(c => c.inputs.vc === '7'), false);
+  history.clearMillingCalcs();
+  assert.deepEqual(history.millingCalcs(), []);
+});
+
 test('localStorage corrompido não quebra a leitura', () => {
   localStorage.setItem('uf_thread_favorites_v1', '{quebrado');
   assert.deepEqual(history.favorites(), []);

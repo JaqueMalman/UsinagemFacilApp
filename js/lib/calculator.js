@@ -28,8 +28,10 @@ export function solve(def, raw) {
  * @param {object} o.ids             ids gerados: input(id), button, result, error, alert
  * @param {object} [o.classes]       classes extras de estilo: badge, button, result
  * @param {object} [o.formulaLabels] textos do botão da fórmula: show, hide
+ * @param {Function} [o.onCalculate] chamado a cada cálculo válido com { mode, inputs, result }
+ * @returns {{ load(entry): void }} load abre um cálculo salvo: troca o modo, preenche e calcula
  */
-export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {}, formulaLabels = {} }) {
+export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {}, formulaLabels = {}, onCalculate }) {
   const labels = { ...FORMULA_LABELS, ...formulaLabels };
   const requested = new URLSearchParams(location.search).get('calc');
   let mode = requested && defs[requested] ? requested : Object.keys(defs)[0];
@@ -46,8 +48,10 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
     const raw = Object.fromEntries(d.fields.map(([id]) => [id, byId(ids.input(id)).value]));
     const { value, rpm, error } = solve(d, raw);
     byId(ids.error).textContent = error || '';
-    setResult(error ? null : formatNumber(value, d.decimals, d.decimals));
+    const result = error ? null : formatNumber(value, d.decimals, d.decimals);
+    setResult(result);
     renderAlert(byId(ids.alert), error ? null : rpmMessage(rpm));
+    if (!error && onCalculate) onCalculate({ mode, inputs: raw, result });
   }
 
   function render() {
@@ -67,17 +71,25 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
     byId(ids.button).onclick = calculate;
   }
 
-  optionButtons.forEach(button => {
-    button.classList.toggle('active', button.dataset.calc === mode);
-    button.onclick = () => {
-      optionButtons.forEach(x => x.classList.toggle('active', x === button));
-      mode = button.dataset.calc;
-      render();
-    };
-  });
+  function setMode(m) {
+    mode = m;
+    optionButtons.forEach(x => x.classList.toggle('active', x.dataset.calc === mode));
+    render();
+  }
+
+  optionButtons.forEach(button => { button.onclick = () => setMode(button.dataset.calc); });
   formulaToggle.onclick = () => {
     formulaBox.hidden = !formulaBox.hidden;
     formulaToggle.textContent = formulaBox.hidden ? labels.show : labels.hide;
   };
-  render();
+  setMode(mode);
+
+  return {
+    load(entry) {
+      if (!defs[entry.mode]) return;
+      setMode(entry.mode);
+      for (const [id] of defs[mode].fields) byId(ids.input(id)).value = entry.inputs?.[id] ?? '';
+      calculate();
+    }
+  };
 }

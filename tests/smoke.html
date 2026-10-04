@@ -65,6 +65,13 @@ const pages = {
     await click('#diameterHelp');
     log('fresamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
     log('fresamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .milling-visual') + ' | figura no topo: ' + !!$('.milling-hero .milling-visual'));
+    log('fresamento', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | visível: ${!$('#calcHistory').hidden}`);
+    await click('.calc-history-item:nth-child(2) .calc-history-open');
+    log('fresamento', 'refazer do histórico', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')} | 1º: ${text('.calc-history-open b')}`);
+    await click('.calc-history-item .saved-delete');
+    log('fresamento', 'lixeira', `${$$('.calc-history-item').length} cálculos`);
+    await click('#clearHistory'); await click('#clearHistory');
+    log('fresamento', 'limpar tudo', `${$$('.calc-history-item').length} cálculos | visível: ${!$('#calcHistory').hidden}`);
   },
   async 'torneamento.html?calc=vc'(){
     const run = async (mode, vals) => {

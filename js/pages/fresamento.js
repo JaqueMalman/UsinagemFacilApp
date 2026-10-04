@@ -1,8 +1,10 @@
 import { createCalculator } from '../lib/calculator.js';
 import { rpm, cuttingSpeed, feedPerMinute, feedPerTooth } from '../lib/formulas.js';
+import * as history from '../lib/history.js';
+import { twoTapButton } from '../lib/confirm.js';
 
-createCalculator({
-  defs: {
+const defs = {
+
     rpm: {
       title:'Descobrir RPM', intro:'Informe o diâmetro da ferramenta e a velocidade de corte.',
       fields:[['vc','Velocidade de corte','m/min','Ex.: 100'],['dc','Diâmetro da ferramenta','mm','Ex.: 10']],
@@ -27,14 +29,40 @@ createCalculator({
       result:'Velocidade de corte', unit:'m/min', formula:'Vc = π × Dc × n ÷ 1000',
       calc:v => cuttingSpeed(v.dc, v.n), decimals:1
     }
-  },
+};
+
+const calculator = createCalculator({
+  defs,
   panel: document.querySelector('#calcPanel'),
   formulaBox: document.querySelector('#formulaBox'),
   formulaToggle: document.querySelector('#toggleFormula'),
   optionButtons: [...document.querySelectorAll('.milling-option')],
   ids: { input: id => id, button: 'doCalc', result: 'result', error: 'calcError', alert: 'safetyAlert' },
-  formulaLabels: { show: 'ⓘ Ver como é calculado' }
+  formulaLabels: { show: 'ⓘ Ver como é calculado' },
+  onCalculate: entry => { history.addMillingCalc(entry); renderHistory(); }
 });
+
+// Últimos cálculos: tocar no card refaz a conta; a 🗑 tira só aquele.
+function renderHistory() {
+  const sec = document.querySelector('#calcHistory'), list = document.querySelector('#calcHistoryList');
+  const items = history.millingCalcs().filter(c => defs[c.mode]);
+  sec.hidden = !items.length;
+  list.innerHTML = '';
+  items.forEach(c => {
+    const d = defs[c.mode];
+    const row = document.createElement('div'); row.className = 'calc-history-item';
+    const open = document.createElement('button'); open.type = 'button'; open.className = 'calc-history-open';
+    const inputs = d.fields.map(([id, label, unit]) => `${label}: ${c.inputs[id]} ${unit}`).join(' · ');
+    open.innerHTML = `<small>${d.result}</small><b>${c.result} ${d.unit}</b><span>${inputs}</span>`;
+    open.onclick = () => { calculator.load(c); document.querySelector('#calcPanel').scrollIntoView({ behavior: 'smooth' }); };
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'saved-delete';
+    del.textContent = '🗑'; del.setAttribute('aria-label', `Tirar do histórico: ${d.result} ${c.result} ${d.unit}`);
+    del.onclick = () => { history.removeMillingCalc(c.at); renderHistory(); };
+    row.append(open, del); list.appendChild(row);
+  });
+}
+twoTapButton(document.querySelector('#clearHistory'), () => { history.clearMillingCalcs(); renderHistory(); });
+renderHistory();
 
 document.querySelector('#diameterHelp').onclick = () => {
   const box = document.querySelector('#diameterHelpBox');

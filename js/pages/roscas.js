@@ -1,6 +1,7 @@
 import { normalizeThread, debounce } from '../lib/text.js';
 import { threadLabel, threadDetailUrl } from '../lib/threads.js';
 import * as history from '../lib/history.js';
+import { twoTapButton } from '../lib/confirm.js';
 
 const allThreads = window.DB?.roscas || [];
 const typeButtons = [...document.querySelectorAll('.thread-type:not(.disabled)')];
@@ -39,16 +40,7 @@ function renderSaved(){
 
 // "Limpar tudo" pede um segundo toque para confirmar.
 const clearSaved = document.querySelector('#clearSaved');
-let clearTimer;
-if (clearSaved) clearSaved.onclick = () => {
-  if (!clearSaved.classList.contains('confirm')) {
-    clearSaved.classList.add('confirm'); clearSaved.textContent = 'Toque de novo para apagar';
-    clearTimer = setTimeout(resetClear, 4000);
-    return;
-  }
-  history.clearThreads(); resetClear(); renderSaved(); render();
-};
-function resetClear(){ clearTimeout(clearTimer); clearSaved.classList.remove('confirm'); clearSaved.textContent = '🗑 Limpar tudo'; }
+if (clearSaved) twoTapButton(clearSaved, () => { history.clearThreads(); renderSaved(); render(); });
 
 function render(){
   const q = normalizeThread(search.value);

@@ -2,6 +2,12 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.30 — Fresamento
+- Nova seção "🕘 Últimos cálculos" com os 5 últimos cálculos feitos no aparelho. Tocar em um card refaz a conta com os mesmos valores.
+- Cada card tem uma lixeira 🗑, e "🗑 Limpar tudo" apaga todos depois de um segundo toque.
+- O "Limpar tudo" de roscas e o do fresamento passam a usar o mesmo código (`js/lib/confirm.js`).
+- Cache PWA v1.30.
+
 ## v1.29 — Roscas
 - "Favoritos e recentes": cada card ganha uma lixeira 🗑 para tirar só aquela rosca (favorita sai dos favoritos, recente sai do histórico).
 - Novo botão "🗑 Limpar tudo", que pede um segundo toque para confirmar.
