@@ -83,3 +83,15 @@ test('localStorage corrompido não quebra a leitura', () => {
   localStorage.setItem('uf_thread_favorites_v1', '{quebrado');
   assert.deepEqual(history.favorites(), []);
 });
+
+test('armazenamento com formato errado não quebra e descarta registros inválidos', () => {
+  for (const k of ['uf_thread_favorites_v1', 'uf_recent_threads_v1', 'uf_recent_calcs_v1', 'uf_milling_history_v1']) localStorage.setItem(k, '{}');
+  assert.equal(history.toggleFavorite(m8), true);
+  assert.doesNotThrow(() => history.addRecentThread(m8));
+  assert.doesNotThrow(() => history.addRecentCalc({ href: 'a.html', label: 'A' }));
+  assert.doesNotThrow(() => history.millingHistory.add({ mode: 'rpm', inputs: { vc: '100' }, result: '1', at: 1 }));
+  localStorage.setItem('uf_milling_history_v1', JSON.stringify([null, 5, { mode: 'rpm' }, { mode: 'rpm', inputs: { vc: '<b>' , dc: 3 }, result: '1', at: 1 }, { mode: 'rpm', inputs: { vc: '100' }, result: '1', at: 2 }]));
+  assert.deepEqual(history.millingHistory.list().map(c => c.at), [2]);
+  localStorage.setItem('uf_thread_favorites_v1', JSON.stringify([{ tipo: 'M' }, m8]));
+  assert.deepEqual(history.favorites().map(f => f.passo), ['8x1,25']);
+});

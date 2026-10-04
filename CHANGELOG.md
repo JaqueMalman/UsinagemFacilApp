@@ -2,6 +2,16 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.33 — Correções da revisão de código
+- Modo offline volta a servir a cópia da versão instalada: página, CSS e scripts são sempre da mesma versão, e a versão nova entra inteira ao tocar em "Atualizar agora". Mantidas as correções da v1.26 (download direto do servidor na instalação) e páginas com parâmetros no endereço (ex.: `?passo=`, `?refazer=`) ocupam uma só cópia. Substitui a busca "rede primeiro" da v1.27.
+- Histórico e favoritos: armazenamento com formato errado não quebra mais a página; registros inválidos são descartados.
+- Conversões: "Fração equivalente" só para frações exatas; aproximações aparecem como "Fração aproximada" com a diferença em mm, e medidas positivas nunca viram 0″.
+- Fresamento: o número de facas precisa ser inteiro (0,5 faca é recusado). Avanço de fresamento confere se o resultado é um número válido.
+- Dados salvos no aparelho entram na tela como texto (não como HTML), e os links de "Consultados recentemente" são validados.
+- Acessibilidade: seletores e estrela de favorito informam o estado (`aria-pressed`); calculadoras calculam com Enter, anunciam o erro e marcam o campo com problema; conversão e buscas ganham rótulos; a explicação em Aprender recebe o foco, mantém o Tab dentro dela, fecha com Escape e devolve o foco ao card.
+- README: "Publicando uma nova versão" explica o modo cache primeiro.
+- Cache PWA v1.33.
+
 ## v1.32 — Calculadoras
 - Nova seção "🧮 Últimos cálculos" com os 5 cálculos mais novos de fresamento e de avanço juntos. Tocar em um abre a página certa e refaz a conta; lixeira em cada card e "Limpar tudo".
 - "🕘 Consultados recentemente" ganha lixeira em cada atalho e "Limpar tudo".

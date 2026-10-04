@@ -24,19 +24,19 @@
 <div class="eyebrow">PÁGINA 10 • TABELAS</div>
 <h1>O que você quer consultar?</h1>
 <p>Escolha uma tabela ou pesquise diretamente uma medida.</p>
-<div class="search-box table-search"><span>⌕</span><input id="tableSearch" placeholder="Ex.: M10 • 1/2 • 8,5 mm" type="search"/><button aria-label="Limpar" id="clearTableSearch" type="button">×</button></div>
+<div class="search-box table-search"><span>⌕</span><input aria-label="Pesquisar nas tabelas" id="tableSearch" placeholder="Ex.: M10 • 1/2 • 8,5 mm" type="search"/><button aria-label="Limpar" id="clearTableSearch" type="button">×</button></div>
 </section>
 <section class="section">
 <div class="section-heading"><h2>Escolha a tabela</h2><span>Toque para abrir</span></div>
 <div class="table-type-grid" id="tableTypes">
-<button class="table-type active" data-type="metric-coarse" type="button"><span>M</span><div><b>Métrica grossa</b><small>Rosca ISO Métrica 60°</small></div></button>
-<button class="table-type" data-type="metric-fine" type="button"><span>M</span><div><b>Métrica fina</b><small>Passos finos</small></div></button>
-<button class="table-type" data-type="unc" type="button"><span>UNC</span><div><b>UNC</b><small>Unificada grossa 60°</small></div></button>
-<button class="table-type" data-type="conversion" type="button"><span>↔</span><div><b>Polegada ↔ mm</b><small>Conversão de medidas</small></div></button>
-<button class="table-type" data-type="unf" type="button"><span>UNF</span><div><b>UNF</b><small>Brocas pendentes</small></div></button>
-<button class="table-type" data-type="bsw" type="button"><span>BSW</span><div><b>BSW</b><small>Validação manual final</small></div></button>
-<button class="table-type" data-type="bsp" type="button"><span>BSP</span><div><b>BSP</b><small>Estrutura pronta • brocas pendentes</small></div></button>
-<button class="table-type" data-type="npt" type="button"><span>NPT</span><div><b>NPT</b><small>Validação manual final</small></div></button>
+<button class="table-type active" data-type="metric-coarse" type="button" aria-pressed="true"><span>M</span><div><b>Métrica grossa</b><small>Rosca ISO Métrica 60°</small></div></button>
+<button class="table-type" data-type="metric-fine" type="button" aria-pressed="false"><span>M</span><div><b>Métrica fina</b><small>Passos finos</small></div></button>
+<button class="table-type" data-type="unc" type="button" aria-pressed="false"><span>UNC</span><div><b>UNC</b><small>Unificada grossa 60°</small></div></button>
+<button class="table-type" data-type="conversion" type="button" aria-pressed="false"><span>↔</span><div><b>Polegada ↔ mm</b><small>Conversão de medidas</small></div></button>
+<button class="table-type" data-type="unf" type="button" aria-pressed="false"><span>UNF</span><div><b>UNF</b><small>Brocas pendentes</small></div></button>
+<button class="table-type" data-type="bsw" type="button" aria-pressed="false"><span>BSW</span><div><b>BSW</b><small>Validação manual final</small></div></button>
+<button class="table-type" data-type="bsp" type="button" aria-pressed="false"><span>BSP</span><div><b>BSP</b><small>Estrutura pronta • brocas pendentes</small></div></button>
+<button class="table-type" data-type="npt" type="button" aria-pressed="false"><span>NPT</span><div><b>NPT</b><small>Validação manual final</small></div></button>
 </div>
 </section>
 <section class="section table-results-section">

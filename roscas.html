@@ -24,7 +24,7 @@
 <div class="eyebrow">🔩 ROSCAS</div>
 <h1>Qual rosca você está usando?</h1>
 <p>Escolha o tipo ou digite a medida. Exemplo: <b>M10 x 1,5</b>.</p>
-<div class="search-box"><span>⌕</span><input autocomplete="off" id="threadSearch" placeholder="Ex.: M10 x 1,5" type="search"/><button aria-label="Limpar" id="clearThread" type="button">×</button></div>
+<div class="search-box"><span>⌕</span><input aria-label="Pesquisar rosca" autocomplete="off" id="threadSearch" placeholder="Ex.: M10 x 1,5" type="search"/><button aria-label="Limpar" id="clearThread" type="button">×</button></div>
 <div aria-live="polite" class="search-feedback" id="threadFeedback"></div>
 </section>
 <section class="section saved-threads" hidden="" id="savedThreads">
@@ -35,13 +35,13 @@
 <section class="section">
 <div class="section-heading"><h2>1. Escolha o tipo de rosca</h2><span>Toque em uma opção</span></div>
 <div class="thread-types" id="threadTypes">
-<button class="thread-type active" data-filter="M Rosca ISO Métrica Grossa 60°" type="button"><span class="thread-badge">M</span><span><b>Métrica grossa</b><small>Rosca ISO métrica • 60°</small></span></button>
-<button class="thread-type" data-filter="M Rosca ISO Métrica Fina" type="button"><span class="thread-badge">M</span><span><b>Métrica fina</b><small>Passos menores</small></span></button>
-<button class="thread-type" data-filter="Rosca UNC / Grossa 60°" type="button"><span class="thread-badge">UNC</span><span><b>UNC</b><small>Polegada • rosca grossa • 60°</small></span></button>
-<button class="thread-type" data-filter="Rosca UNF / Fina 60°" type="button"><span class="thread-badge">UNF</span><span><b>UNF</b><small>Estrutura pronta • brocas pendentes</small></span></button>
-<button class="thread-type" data-filter="Rosca BSW / Whitworth 55°" type="button"><span class="thread-badge">BSW</span><span><b>BSW</b><small>Preparada para validação manual</small></span></button>
-<button class="thread-type" data-filter="Rosca BSP Paralela / G 55°" type="button"><span class="thread-badge">BSP</span><span><b>BSP</b><small>Estrutura threadlib • brocas pendentes</small></span></button>
-<button class="thread-type" data-filter="Rosca NPT / Cônica 60°" type="button"><span class="thread-badge">NPT</span><span><b>NPT</b><small>Preparada para validação manual</small></span></button>
+<button class="thread-type active" data-filter="M Rosca ISO Métrica Grossa 60°" type="button" aria-pressed="true"><span class="thread-badge">M</span><span><b>Métrica grossa</b><small>Rosca ISO métrica • 60°</small></span></button>
+<button class="thread-type" data-filter="M Rosca ISO Métrica Fina" type="button" aria-pressed="false"><span class="thread-badge">M</span><span><b>Métrica fina</b><small>Passos menores</small></span></button>
+<button class="thread-type" data-filter="Rosca UNC / Grossa 60°" type="button" aria-pressed="false"><span class="thread-badge">UNC</span><span><b>UNC</b><small>Polegada • rosca grossa • 60°</small></span></button>
+<button class="thread-type" data-filter="Rosca UNF / Fina 60°" type="button" aria-pressed="false"><span class="thread-badge">UNF</span><span><b>UNF</b><small>Estrutura pronta • brocas pendentes</small></span></button>
+<button class="thread-type" data-filter="Rosca BSW / Whitworth 55°" type="button" aria-pressed="false"><span class="thread-badge">BSW</span><span><b>BSW</b><small>Preparada para validação manual</small></span></button>
+<button class="thread-type" data-filter="Rosca BSP Paralela / G 55°" type="button" aria-pressed="false"><span class="thread-badge">BSP</span><span><b>BSP</b><small>Estrutura threadlib • brocas pendentes</small></span></button>
+<button class="thread-type" data-filter="Rosca NPT / Cônica 60°" type="button" aria-pressed="false"><span class="thread-badge">NPT</span><span><b>NPT</b><small>Preparada para validação manual</small></span></button>
 </div>
 </section>
 <section class="section thread-results-section">

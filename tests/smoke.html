@@ -30,6 +30,7 @@ const $$ = s => [...doc.querySelectorAll(s)];
 const text = s => ($(s)?.textContent ?? '∅').replace(/\s+/g, ' ').trim();
 async function type(s, v){ const el = $(s); el.value = v; el.dispatchEvent(new Event('input', {bubbles:true})); await wait(150); }
 async function click(s){ (typeof s === 'string' ? $(s) : s).click(); await wait(50); }
+async function key(s, k){ $(s).dispatchEvent(new KeyboardEvent('keydown', {key: k, bubbles: true})); await wait(50); }
 function log(page, name, value){ results.push(`${page} | ${name} => ${value}`); }
 
 const pages = {
@@ -65,6 +66,9 @@ const pages = {
     await click('#diameterHelp');
     log('fresamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
     log('fresamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .milling-visual') + ' | figura no topo: ' + !!$('.milling-hero .milling-visual'));
+    log('fresamento', 'fz com 0,5 faca', await run('fz', {vf:'1000', n:'3000', z:'0,5'}) + ` | campo z inválido: ${$('#z').getAttribute('aria-invalid')}`);
+    await click('.milling-option[data-calc="rpm"]'); $('#vc').value = '100'; $('#dc').value = '10'; await key('#dc', 'Enter');
+    log('fresamento', 'Enter calcula', `${text('#result strong')} | pressionado: ${$$('.milling-option[aria-pressed="true"]').map(b => b.dataset.calc).join(',')}`);
     log('fresamento', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | visível: ${!$('#calcHistory').hidden}`);
     await click('.calc-history-item:nth-child(2) .calc-history-open');
     log('fresamento', 'refazer do histórico', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')} | 1º: ${text('.calc-history-open b')}`);
@@ -122,7 +126,8 @@ const pages = {
       return `${text('#conversionResult strong')} | ${text('#resultExtra')} | erro: ${text('#conversionError')}`;
     };
     for (const v of ['1/2', '1 1/2', '0,5', '']) log('conversoes', `pol "${v}"`, await run('in-mm', v));
-    for (const v of ['12,7', '12.700', '25,4 mm', '10', 'abc']) log('conversoes', `mm "${v}"`, await run('mm-in', v));
+    for (const v of ['12,7', '12.700', '25,4 mm', '10', '12,71', '0,01', 'abc']) log('conversoes', `mm "${v}"`, await run('mm-in', v));
+    log('conversoes', 'aria', `modo pressionado: ${$('.conversion-mode[aria-pressed="true"]')?.dataset.mode} | campo inválido: ${$('#conversionInput').getAttribute('aria-invalid')}`);
     log('conversoes', 'grade', $$('#fractionGrid button').length + ' botões, 1º: ' + text('#fractionGrid button small'));
     await click('#fractionGrid button:nth-child(4)');
     log('conversoes', 'grade 1/4', text('#conversionResult strong'));
@@ -178,7 +183,12 @@ const pages = {
     await type('#learnSearch', 'zzz');
     log('aprender', 'busca vazia', `vazio visível: ${!$('#learnEmpty').classList.contains('is-hidden')}`);
     await click('.learn-card[data-topic="fz"]');
-    log('aprender', 'abrir fz', `${$('#learnSheet').classList.contains('open')} | ${text('#learnContent h2')}`);
+    await type('#learnSearch', '');
+    $('.learn-card[data-topic="fz"]').focus();
+    await click('.learn-card[data-topic="fz"]');
+    log('aprender', 'abrir fz', `${$('#learnSheet').classList.contains('open')} | ${text('#learnContent h2')} | foco: ${doc.activeElement.id}`);
+    await key('#learnSheet', 'Escape');
+    log('aprender', 'Escape', `aberta: ${$('#learnSheet').classList.contains('open')} | foco volta: ${doc.activeElement.dataset.topic}`);
   },
   async 'calculadoras.html'(){
     frame.contentWindow.localStorage.removeItem('uf_recent_calcs_v1');

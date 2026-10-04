@@ -20,7 +20,10 @@ export function setupCalcHistory({ store, describe, onOpen, prefix = 'calcHistor
     items.forEach(([c, info]) => {
       const row = document.createElement('div'); row.className = 'calc-history-item';
       const open = document.createElement('button'); open.type = 'button'; open.className = 'calc-history-open';
-      open.innerHTML = `<small>${info.title}</small><b>${info.result}</b><span>${info.inputs}</span>`;
+      // Textos vêm do armazenamento do aparelho: entram como texto, nunca como HTML.
+      for (const [tag, text] of [['small', info.title], ['b', info.result], ['span', info.inputs]]) {
+        const el = document.createElement(tag); el.textContent = text; open.appendChild(el);
+      }
       open.onclick = () => onOpen(c);
       const del = document.createElement('button'); del.type = 'button'; del.className = 'saved-delete';
       del.textContent = '🗑'; del.setAttribute('aria-label', `Tirar do histórico: ${info.title} ${info.result}`);

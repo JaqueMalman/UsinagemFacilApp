@@ -31,20 +31,23 @@ export function parseInch(value) {
   return /^(\d+\.?\d*|\.\d+)$/.test(s) ? Number(s) : NaN;
 }
 
-// Fração comum (até 1/64″) que coincide com a medida em polegadas, ou null.
+// Fração comum (até 1/64″) mais próxima da medida em polegadas, se a diferença for no
+// máximo 0,0008″ (≈ 0,02 mm). Retorna { text, exact, diffMm } ou null. Nunca sugere 0″
+// para uma medida positiva. diffMm = fração − medida, em mm (positivo: a fração é maior).
 export function nearestFraction(inches) {
   let best = null, diff = Infinity;
   for (const den of [2, 4, 8, 16, 32, 64]) {
     const num = Math.round(inches * den), d = Math.abs(num / den - inches);
     if (d < diff) { diff = d; best = [num, den]; }
   }
-  if (diff > 0.0008 || !best) return null;
+  if (diff > 0.0008 || !best || best[0] <= 0) return null;
   let [n, d] = best;
+  const diffMm = (n / d - inches) * 25.4;
   const gcd = (a, b) => b ? gcd(b, a % b) : a, g = gcd(n, d);
   n /= g; d /= g;
-  if (d === 1) return `${n}″`;
   const whole = Math.floor(n / d), rem = n % d;
-  return whole ? `${whole} ${rem}/${d}″` : `${rem}/${d}″`;
+  const text = d === 1 ? `${n}″` : whole ? `${whole} ${rem}/${d}″` : `${rem}/${d}″`;
+  return { text, exact: Math.abs(diffMm) < 0.0005, diffMm };
 }
 
 export function formatNumber(value, maxDecimals = 3, minDecimals = 0) {

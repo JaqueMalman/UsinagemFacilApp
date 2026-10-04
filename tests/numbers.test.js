@@ -49,13 +49,24 @@ test('parseInch: decimal, fração e fração mista', () => {
 });
 
 test('nearestFraction: frações comuns até 1/64″', () => {
-  assert.equal(nearestFraction(0.5), '1/2″');
-  assert.equal(nearestFraction(12.7 / 25.4), '1/2″');
-  assert.equal(nearestFraction(6.35 / 25.4), '1/4″');
-  assert.equal(nearestFraction(1), '1″');
-  assert.equal(nearestFraction(1.5), '1 1/2″');
-  assert.equal(nearestFraction(1 / 64), '1/64″');
-  assert.equal(nearestFraction(10 / 25.4), null);
+  const t = x => nearestFraction(x)?.text ?? null;
+  assert.equal(t(0.5), '1/2″');
+  assert.equal(t(12.7 / 25.4), '1/2″');
+  assert.equal(t(6.35 / 25.4), '1/4″');
+  assert.equal(t(1), '1″');
+  assert.equal(t(1.5), '1 1/2″');
+  assert.equal(t(1 / 64), '1/64″');
+  assert.equal(t(10 / 25.4), null);
+  assert.equal(nearestFraction(12.7 / 25.4).exact, true);
+});
+
+test('nearestFraction: aproximação aparece como aproximada e nunca vira 0″', () => {
+  const f = nearestFraction(12.71 / 25.4);
+  assert.equal(f.text, '1/2″');
+  assert.equal(f.exact, false);
+  assert.ok(Math.abs(f.diffMm + 0.01) < 1e-9, 'a fração é 0,01 mm menor que a medida');
+  assert.equal(nearestFraction(0.01 / 25.4), null);
+  assert.equal(nearestFraction(0), null);
 });
 
 test('formatNumber: padrão pt-BR', () => {

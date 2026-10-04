@@ -20,7 +20,7 @@ function clearResult() {
 
 function setMode() {
   const m = MODES[mode];
-  modes.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  modes.forEach(b => { const on = b.dataset.mode === mode; b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on)); });
   input.value = ''; error.textContent = '';
   inputTitle.textContent = m.title; inputHelp.textContent = m.help; input.placeholder = m.placeholder;
   inputUnit.textContent = m.from; resultUnit.textContent = m.to; formulaText.textContent = m.formula;
@@ -30,6 +30,7 @@ function setMode() {
 function convert() {
   error.textContent = '';
   const v = mode === 'in-mm' ? parseInch(input.value) : parseMillimeters(input.value);
+  input.setAttribute('aria-invalid', String(!(Number.isFinite(v) && v > 0)));
   if (!Number.isFinite(v) || v <= 0) { error.textContent = 'Digite uma medida válida.'; clearResult(); return; }
   result.classList.remove('empty');
   if (mode === 'in-mm') {
@@ -39,7 +40,9 @@ function convert() {
   } else {
     const inch = v / 25.4, frac = nearestFraction(inch);
     result.querySelector('strong').textContent = formatNumber(inch, 5);
-    resultExtra.textContent = frac ? `Fração equivalente: ${frac}` : 'Não coincide exatamente com uma fração comum até 1/64″.';
+    resultExtra.textContent = !frac ? 'Não fica perto de nenhuma fração comum até 1/64″.'
+      : frac.exact ? `Fração equivalente: ${frac.text}`
+      : `Fração aproximada: ${frac.text} (${formatNumber(Math.abs(frac.diffMm), 3)} mm ${frac.diffMm > 0 ? 'maior' : 'menor'} que a medida)`;
   }
 }
 

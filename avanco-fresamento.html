@@ -28,7 +28,7 @@
 <section class="feed-card">
 <div class="feed-step"><span>1</span><div><b>Quantas facas tem a ferramenta?</b><small>Toque no número. É a quantidade de dentes/cortes da fresa.</small></div></div>
 <div aria-label="Número de facas" class="teeth-picker" id="teethPicker" role="group">
-<button data-z="2" type="button">2<small>facas</small></button><button data-z="3" type="button">3<small>facas</small></button><button class="active" data-z="4" type="button">4<small>facas</small></button><button data-z="5" type="button">5<small>facas</small></button><button data-z="6" type="button">6<small>facas</small></button>
+<button aria-pressed="false" data-z="2" type="button">2<small>facas</small></button><button aria-pressed="false" data-z="3" type="button">3<small>facas</small></button><button class="active" aria-pressed="true" data-z="4" type="button">4<small>facas</small></button><button aria-pressed="false" data-z="5" type="button">5<small>facas</small></button><button aria-pressed="false" data-z="6" type="button">6<small>facas</small></button>
 </div>
 <button class="diameter-help-btn" id="dontKnow" type="button">💡 Não sei onde ver o número de facas</button>
 <div class="diameter-help" hidden="" id="teethHelp"><b>Conte os dentes na ponta da fresa.</b><p>Olhe a ponta da fresa e conte quantos dentes/cortes trabalham ao redor dela. Cada dente é uma “faca”. Na figura abaixo, a fresa tem <strong>4 facas</strong> (em verde).</p>
@@ -42,16 +42,16 @@
 </section>
 <section class="feed-card">
 <div class="feed-step"><span>2</span><div><b>Qual a rotação da ferramenta?</b><small>Digite o RPM que será usado na máquina.</small></div></div>
-<label class="feed-input"><input aria-label="Rotação" id="rpm" inputmode="decimal" placeholder="Ex.: 3180"/><strong>RPM</strong></label>
+<label class="feed-input"><input aria-describedby="feedError" aria-label="Rotação" enterkeyhint="done" id="rpm" inputmode="decimal" placeholder="Ex.: 3180"/><strong>RPM</strong></label>
 </section>
 <section class="feed-card">
 <div class="feed-step"><span>3</span><div><b>Qual o avanço por faca (fz)?</b><small>Use o valor recomendado para a ferramenta/processo.</small></div></div>
-<label class="feed-input"><input aria-label="Avanço por faca" id="fz" inputmode="decimal" placeholder="Ex.: 0,08"/><strong>mm/faca</strong></label>
+<label class="feed-input"><input aria-describedby="feedError" aria-label="Avanço por faca" enterkeyhint="done" id="fz" inputmode="decimal" placeholder="Ex.: 0,08"/><strong>mm/faca</strong></label>
 <div class="source-note">📘 Este valor deve vir do catálogo, fabricante ou processo definido.</div>
 </section>
 <section class="feed-action">
 <button class="big-calc-btn" id="calculateFeed" type="button">🧮 CALCULAR AVANÇO</button>
-<div aria-live="polite" class="calc-error" id="feedError"></div>
+<div class="calc-error" id="feedError" role="alert"></div>
 <div aria-live="polite" aria-atomic="true" class="feed-result empty" id="feedResult"><small>COLOQUE NA MÁQUINA</small><strong>—</strong><span>mm/min</span><p id="feedSummary">Preencha os dados acima.</p></div>
 <div class="safety-slot" id="feedSafetyAlert" hidden></div>
 </section>

@@ -1,6 +1,19 @@
 // Favoritos e histórico recente, salvos só no aparelho (localStorage).
 const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1', milling: 'uf_milling_history_v1', feed: 'uf_feed_history_v1' };
-const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; } };
+// O armazenamento pode ter sido alterado ou vir de uma versão antiga: só aceita uma
+// lista e descarta os registros que não têm o formato esperado (VALID).
+const isText = v => typeof v === 'string' && v.length > 0;
+const isThread = x => isText(x?.tipo) && isText(x?.passo);
+const isCalc = x => isText(x?.mode) && x.inputs && typeof x.inputs === 'object' && !Array.isArray(x.inputs)
+  && Object.values(x.inputs).every(v => typeof v === 'string') && typeof x.result === 'string' && Number.isFinite(x.at);
+const isRecentCalc = x => isText(x?.href) && isText(x?.label);
+const VALID = { [K.fav]: isThread, [K.recentT]: isThread, [K.recentC]: isRecentCalc, [K.milling]: isCalc, [K.feed]: isCalc };
+
+const read = k => {
+  let v;
+  try { v = JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; }
+  return Array.isArray(v) ? v.filter(VALID[k]) : [];
+};
 const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const key = t => `${t.tipo}|${t.passo}`;
 

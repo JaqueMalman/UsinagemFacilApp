@@ -10,8 +10,39 @@ diametro:{icon:'📏',title:'O que é diâmetro?',simple:'É a medida de um lado
 facas:{icon:'🔢',title:'Número de facas (z)',simple:'É a quantidade de dentes cortantes da fresa.',visual:'① ② ③ ④',example:'Se você contar 4 dentes, z = 4.',tip:'Conte os dentes que se repetem ao redor da ferramenta. Não confunda canal com dente.',technical:'O número de facas aparece como z na fórmula fz = vf ÷ (n × z).'},
 polegada:{icon:'½″',title:'Como ler polegadas?',simple:'Polegadas podem aparecer como frações: 1/2”, 3/8”, 1/4” e outras.',visual:'0 ┃ ¼ ┃ ½ ┃ ¾ ┃ 1″',example:'1/2” corresponde a 12,70 mm.',tip:'Use a página Conversões quando precisar passar de polegada para milímetro ou de milímetro para polegada.',technical:'A conversão usa 1 polegada = 25,4 mm.'}}
 const grid=document.getElementById('learnGrid'), search=document.getElementById('learnSearch'), clear=document.getElementById('learnClear'), sheet=document.getElementById('learnSheet'), content=document.getElementById('learnContent'), empty=document.getElementById('learnEmpty');
-function openTopic(k){const t=topics[k];if(!t)return;content.innerHTML=`<div class="learn-big-icon">${t.icon}</div><div class="eyebrow">EXPLICAÇÃO SIMPLES</div><h2>${t.title}</h2><p class="learn-simple">${t.simple}</p><div class="learn-visual">${t.visual}</div><div class="learn-example"><small>EXEMPLO</small><strong>${t.example}</strong></div><div class="learn-tip"><span>💡</span><p>${t.tip}</p></div><details class="formula-box"><summary>ⓘ Ver parte técnica</summary><p>${t.technical}</p></details>`;sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');}
-grid.addEventListener('click',e=>{const b=e.target.closest('[data-topic]');if(b)openTopic(b.dataset.topic)});function closeSheet(){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true')}document.getElementById('learnClose').onclick=closeSheet;document.getElementById('learnBackdrop').onclick=closeSheet;
+// Janela de explicação: ao abrir, o foco vai para o "×"; Tab fica dentro dela; Escape,
+// o "×" ou tocar fora fecham; ao fechar, o foco volta para o card que abriu.
+const closeBtn = document.getElementById('learnClose');
+let opener = null;
+
+function openTopic(k) {
+  const t = topics[k];
+  if (!t) return;
+  content.innerHTML = `<div class="learn-big-icon">${t.icon}</div><div class="eyebrow">EXPLICAÇÃO SIMPLES</div><h2 id="learnTitle">${t.title}</h2><p class="learn-simple">${t.simple}</p><div class="learn-visual">${t.visual}</div><div class="learn-example"><small>EXEMPLO</small><strong>${t.example}</strong></div><div class="learn-tip"><span>💡</span><p>${t.tip}</p></div><details class="formula-box"><summary>ⓘ Ver parte técnica</summary><p>${t.technical}</p></details>`;
+  opener = document.activeElement;
+  sheet.classList.add('open');
+  sheet.setAttribute('aria-hidden', 'false');
+  closeBtn.focus();
+}
+
+function closeSheet() {
+  if (!sheet.classList.contains('open')) return;
+  sheet.classList.remove('open');
+  sheet.setAttribute('aria-hidden', 'true');
+  opener?.focus();
+}
+
+sheet.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeSheet(); return; }
+  if (e.key !== 'Tab') return;
+  const items = [...sheet.querySelectorAll('.learn-sheet-card button, .learn-sheet-card summary, .learn-sheet-card a[href]')];
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+grid.addEventListener('click', e => { const b = e.target.closest('[data-topic]'); if (b) openTopic(b.dataset.topic); });
+closeBtn.onclick = closeSheet;
+document.getElementById('learnBackdrop').onclick = closeSheet;
 function filterTopics(){
   const q = normalizeSearch(search.value).trim();
   clear.style.visibility = q ? 'visible' : 'hidden';

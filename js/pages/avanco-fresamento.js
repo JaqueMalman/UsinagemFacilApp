@@ -17,7 +17,7 @@ const toggle = document.querySelector('#toggleFeedFormula');
 
 function setTeeth(n) {
   z = n;
-  picker.querySelectorAll('button').forEach(x => x.classList.toggle('active', Number(x.dataset.z) === z));
+  picker.querySelectorAll('button').forEach(x => { const on = Number(x.dataset.z) === z; x.classList.toggle('active', on); x.setAttribute('aria-pressed', String(on)); });
 }
 picker.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => setTeeth(Number(btn.dataset.z))));
 document.querySelector('#dontKnow').onclick = () => { help.hidden = !help.hidden; };
@@ -26,6 +26,8 @@ function calculate() {
   const rpmText = document.querySelector('#rpm').value, fzText = document.querySelector('#fz').value;
   const n = parseNumberBR(rpmText, 0);
   const fz = parseNumberBR(fzText, 0);
+  document.querySelector('#rpm').setAttribute('aria-invalid', String(!(n > 0)));
+  document.querySelector('#fz').setAttribute('aria-invalid', String(!(fz > 0)));
   if (!(n > 0) || !(fz > 0)) {
     error.textContent = 'Preencha RPM e avanço por faca com valores maiores que zero.';
     result.classList.add('empty'); result.querySelector('strong').textContent = '—';
@@ -33,9 +35,16 @@ function calculate() {
     renderAlert(alertSlot, null);
     return;
   }
+  const value = feedFromTooth(n, z, fz);
+  if (!Number.isFinite(value)) {
+    error.textContent = 'Não foi possível calcular. Confira os valores.';
+    result.classList.add('empty'); result.querySelector('strong').textContent = '—';
+    renderAlert(alertSlot, null);
+    return;
+  }
   error.textContent = ''; result.classList.remove('empty');
   renderAlert(alertSlot, rpmMessage(n));
-  const vf = formatNumber(feedFromTooth(n, z, fz), 0);
+  const vf = formatNumber(value, 0);
   result.querySelector('strong').textContent = vf;
   summary.textContent = `Cálculo: ${formatNumber(n)} RPM × ${z} facas × ${formatNumber(fz)} mm/faca.`;
   result.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -43,6 +52,7 @@ function calculate() {
   refreshHistory();
 }
 document.querySelector('#calculateFeed').onclick = calculate;
+for (const id of ['#rpm', '#fz']) document.querySelector(id).addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
 
 // Últimos cálculos: tocar no card preenche facas, RPM e fz e refaz a conta.
 const refreshHistory = setupCalcHistory({

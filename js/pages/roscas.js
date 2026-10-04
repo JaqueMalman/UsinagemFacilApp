@@ -25,7 +25,10 @@ function renderSaved(){
     const wrap = document.createElement('div'); wrap.className = 'saved-thread-wrap';
     const b = document.createElement('button');
     b.className = 'saved-thread-chip'; b.type = 'button';
-    b.innerHTML = `<span>${r._fav ? '⭐' : '🕘'}</span><b>${threadLabel(r)}</b><small>${r.tipo}</small>`;
+    // Favoritos e recentes vêm do armazenamento do aparelho: entram como texto.
+    for (const [tag, text] of [['span', r._fav ? '⭐' : '🕘'], ['b', threadLabel(r)], ['small', r.tipo]]) {
+      const el = document.createElement(tag); el.textContent = text; b.appendChild(el);
+    }
     b.onclick = () => openDetail(r);
     const del = document.createElement('button'); del.className = 'saved-delete'; del.type = 'button';
     del.textContent = '🗑';
@@ -57,9 +60,10 @@ function render(){
     b.innerHTML = `<b>${threadLabel(r)}</b><small>${r.tipo}</small><div class="drill-mini">${r.broca ? `🕳 Broca ${r.broca} mm` : '🟡 Broca pendente de validação WestTools'}</div><span class="go">›</span>`;
     b.onclick = () => openDetail(r);
     const star = document.createElement('button'); star.className = 'favorite-star'; star.type = 'button';
-    star.setAttribute('aria-label', 'Favoritar rosca');
-    star.textContent = history.isFavorite(r) ? '★' : '☆';
-    star.onclick = e => { e.stopPropagation(); star.textContent = history.toggleFavorite(r) ? '★' : '☆'; renderSaved(); };
+    star.setAttribute('aria-label', `Favoritar ${threadLabel(r)}`);
+    const showStar = on => { star.textContent = on ? '★' : '☆'; star.setAttribute('aria-pressed', String(on)); };
+    showStar(history.isFavorite(r));
+    star.onclick = e => { e.stopPropagation(); showStar(history.toggleFavorite(r)); renderSaved(); };
     wrap.append(b, star); results.appendChild(wrap);
   });
   feedback.textContent = q ? (rows.length ? 'Toque na medida para ver qual broca usar.' : 'Não encontrei essa rosca nos dados cadastrados.') : '';
@@ -69,7 +73,7 @@ function openDetail(r){ history.addRecentThread(r); location.href = threadDetail
 function closeSheet(){ sheet.classList.remove('open'); sheet.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
 
 typeButtons.forEach(b => b.addEventListener('click', () => {
-  typeButtons.forEach(x => x.classList.remove('active')); b.classList.add('active');
+  typeButtons.forEach(x => { x.classList.toggle('active', x === b); x.setAttribute('aria-pressed', String(x === b)); });
   activeType = b.dataset.filter; search.value = ''; render();
 }));
 search.addEventListener('input', debounce(render, 100));

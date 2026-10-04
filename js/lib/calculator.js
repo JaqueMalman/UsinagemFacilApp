@@ -13,6 +13,9 @@ export function solve(def, raw) {
     vals[id] = parseNumberBR(raw[id], 0);
     if (!Number.isFinite(vals[id]) || vals[id] <= 0) return { error: 'Preencha todos os campos com valores maiores que zero.' };
   }
+  for (const id of def.integerFields || []) {
+    if (!Number.isInteger(vals[id])) return { error: 'O número de facas deve ser um número inteiro (1, 2, 3...).', field: id };
+  }
   const value = def.calc(vals);
   if (!Number.isFinite(value)) return { error: 'Não foi possível calcular. Confira os valores.' };
   return { value, rpm: def.unit === 'RPM' ? value : vals.n };
@@ -20,7 +23,7 @@ export function solve(def, raw) {
 
 /**
  * @param {object} o
- * @param {object} o.defs            modos: { title, intro, fields:[[id,label,unit,placeholder]], result, unit, formula, calc, decimals, hint? }
+ * @param {object} o.defs            modos: { title, intro, fields:[[id,label,unit,placeholder]], result, unit, formula, calc, decimals, hint?, integerFields? }
  * @param {Element} o.panel          onde o formulário é desenhado
  * @param {Element} o.formulaBox     caixa da fórmula
  * @param {Element} o.formulaToggle  botão que mostra/oculta a fórmula
@@ -46,8 +49,13 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
   function calculate() {
     const d = defs[mode];
     const raw = Object.fromEntries(d.fields.map(([id]) => [id, byId(ids.input(id)).value]));
-    const { value, rpm, error } = solve(d, raw);
+    const { value, rpm, error, field } = solve(d, raw);
     byId(ids.error).textContent = error || '';
+    // Marca para leitores de tela quais campos estão com problema.
+    for (const [id] of d.fields) {
+      const bad = !!error && (id === field || !(parseNumberBR(raw[id], 0) > 0));
+      byId(ids.input(id)).setAttribute('aria-invalid', String(bad));
+    }
     const result = error ? null : formatNumber(value, d.decimals, d.decimals);
     setResult(result);
     renderAlert(byId(ids.alert), error ? null : rpmMessage(rpm));
@@ -60,20 +68,22 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
     panel.innerHTML = `
       <div class="calc-simple-head"><span class="step-badge${cls(classes.badge)}">CALCULAR</span><h2>${d.title}</h2><p>${d.intro}</p></div>
       <div class="simple-fields">${d.fields.map(([id, label, unit, placeholder]) => `
-        <label class="simple-field"><span>${label}</span><div><input inputmode="decimal" id="${ids.input(id)}" placeholder="${placeholder}" aria-label="${label}"><b>${unit}</b></div></label>`).join('')}
+        <label class="simple-field"><span>${label}</span><div><input inputmode="decimal" id="${ids.input(id)}" placeholder="${placeholder}" aria-label="${label}" aria-describedby="${ids.error}" enterkeyhint="done"><b>${unit}</b></div></label>`).join('')}
       </div>
       <button class="big-calc-btn${cls(classes.button)}" id="${ids.button}" type="button">🧮 CALCULAR</button>
       <div aria-live="polite" aria-atomic="true" class="big-result${cls(classes.result)} empty" id="${ids.result}"><small>${d.result}</small><strong>—</strong><span>${d.unit}</span>${d.hint ? `<p>${d.hint}</p>` : ''}</div>
-      <div class="calc-error" id="${ids.error}"></div><div class="safety-slot" id="${ids.alert}" hidden></div>`;
+      <div class="calc-error" id="${ids.error}" role="alert"></div><div class="safety-slot" id="${ids.alert}" hidden></div>`;
     formulaBox.innerHTML = `<b>Fórmula da tabela técnica</b><p>${d.formula}</p><small>π = 3,1416</small>`;
     formulaBox.hidden = true;
     formulaToggle.textContent = labels.show;
     byId(ids.button).onclick = calculate;
+    // Enter em qualquer campo calcula, como tocar no botão.
+    panel.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); }));
   }
 
   function setMode(m) {
     mode = m;
-    optionButtons.forEach(x => x.classList.toggle('active', x.dataset.calc === mode));
+    optionButtons.forEach(x => { const on = x.dataset.calc === mode; x.classList.toggle('active', on); x.setAttribute('aria-pressed', String(on)); });
     render();
   }
 

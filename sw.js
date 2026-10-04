@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.32`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.33`;
 
 const STATIC_FILES = [
   './',
@@ -75,29 +75,27 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Rede primeiro: com internet, cada página e arquivo vem do servidor (revalidado,
-// então HTML e CSS são sempre da mesma versão) e a cópia do cache é atualizada.
-// Sem internet, usa a cópia guardada.
+// Cache primeiro: cada versão do app é um conjunto completo, baixado de uma vez na
+// instalação (com cache: 'reload'). Assim página, CSS e scripts são sempre da mesma
+// versão. A versão nova só passa a valer quando o operador toca em "Atualizar agora"
+// (ou fecha todas as abas do app). Arquivo fora do conjunto vem da rede e é guardado.
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
   const isPage = event.request.mode === 'navigate';
+  // Páginas são guardadas e procuradas sem a query string: fresamento.html?calc=rpm,
+  // detalhe-rosca.html?passo=... e ?refazer=... usam o mesmo HTML.
+  const cacheKey = isPage ? url.origin + url.pathname : event.request;
 
   event.respondWith(
-    fetch(url.href, { cache: 'no-cache', credentials: 'same-origin' }).then(response => {
-      if (response && response.status === 200 && response.type === 'basic') {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-      }
-      return response;
-    }).catch(() =>
-      // Navegações ignoram a query string: fresamento.html?calc=rpm e
-      // detalhe-rosca.html?passo=... usam o mesmo HTML pré-cacheado.
-      caches.match(event.request, { ignoreSearch: isPage }).then(cached =>
-        cached || (isPage ? caches.match('./index.html') : Response.error())
-      )
-    )
+    caches.open(CACHE_NAME).then(cache => cache.match(cacheKey).then(cached => {
+      if (cached) return cached;
+      return fetch(event.request).then(response => {
+        if (response && response.status === 200 && response.type === 'basic') cache.put(cacheKey, response.clone());
+        return response;
+      }).catch(() => (isPage ? cache.match('./index.html') : Response.error()));
+    }))
   );
 });

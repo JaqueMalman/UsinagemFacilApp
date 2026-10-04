@@ -50,6 +50,6 @@ Cada página carrega, nesta ordem: os dados de que precisa (`data/*.js`, scripts
 
 ## Publicando uma nova versão
 
-1. Suba a versão do cache em `sw.js` (`CACHE_NAME`). Sem isso, os aparelhos continuam com os arquivos antigos.
+1. Suba a versão do cache em `sw.js` (`CACHE_NAME`). O app serve sempre a cópia completa da versão instalada; sem subir a versão, os aparelhos continuam com os arquivos antigos. Com a versão nova, aparece o aviso "Nova versão disponível" e, ao tocar em "Atualizar agora", tudo é trocado de uma vez. Para testar localmente, use Cmd+Shift+R ou suba a versão.
 2. Se criou, renomeou ou removeu arquivos, atualize `STATIC_FILES` em `sw.js`. O `npm test` avisa se a lista não bater com os arquivos do app.
 3. Registre as mudanças no `CHANGELOG.md`.

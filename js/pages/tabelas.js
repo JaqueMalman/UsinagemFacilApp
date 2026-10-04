@@ -40,7 +40,7 @@ function render(){
 }
 
 $$('.table-type:not(.disabled)').forEach(btn => btn.addEventListener('click', () => {
-  $$('.table-type').forEach(x => x.classList.remove('active')); btn.classList.add('active'); mode = btn.dataset.type; render();
+  $$('.table-type').forEach(x => { x.classList.toggle('active', x === btn); if (!x.classList.contains('disabled')) x.setAttribute('aria-pressed', String(x === btn)); }); mode = btn.dataset.type; render();
   $('.table-results-section').scrollIntoView({behavior:'smooth', block:'start'});
 }));
 search.addEventListener('input', debounce(render, 100));
