@@ -2,6 +2,11 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.24 — Conversões
+- "USINAGEM FÁCIL" no topo fica alinhado à esquerda, ao lado da seta de voltar, em vez de centralizado.
+- A seta de voltar "‹" no topo fica branca, e não mais azul, em conversões e aprender.
+- Cache PWA v1.24.
+
 ## v1.23 — Cabeçalho
 - Tocar em "USINAGEM FÁCIL" no topo das telas volta para a tela inicial.
 - Cache PWA v1.23.
