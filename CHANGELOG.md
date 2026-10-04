@@ -2,6 +2,15 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.27 — Modo offline
+- Com internet, o app passa a buscar cada página e arquivo no servidor e só usa a cópia guardada quando está sem internet. Antes ele usava sempre a cópia guardada, e uma cópia desatualizada deixava páginas como Tabelas e Aprender sem formatação ao navegar entre telas, mesmo com o Cmd+Shift+R funcionando.
+- Cache PWA v1.27.
+
+## v1.26 — Modo offline
+- Corrigido: ao instalar uma versão nova, o app podia guardar uma página antiga junto com o CSS novo. Em conversões, o botão CONVERTER aparecia sem formatação depois de abrir outra tela (ex.: Calculadoras). Agora os arquivos da versão nova são sempre baixados do servidor.
+- Tabelas e Aprender: o topo fica igual ao de Conversões, com o ⚙ e "USINAGEM FÁCIL" à esquerda e sem a seta "‹".
+- Cache PWA v1.26.
+
 ## v1.25 — Tabelas
 - O topo mostra "USINAGEM FÁCIL" com o subtítulo "Tabelas técnicas", no lugar de "TABELAS TÉCNICAS / Consulta rápida para a máquina", e volta para a tela inicial ao ser tocado.
 - Conversões: removida a seta "‹" ao lado de "USINAGEM FÁCIL"; o botão CONVERTER ganha o mesmo visual do botão CALCULAR do fresamento.

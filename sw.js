@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.25`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.27`;
 
 const STATIC_FILES = [
   './',
@@ -48,8 +48,10 @@ const STATIC_FILES = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
+    // cache: 'reload' ignora o cache HTTP do navegador. Sem isso, uma versão nova
+    // pode guardar um HTML antigo junto com o CSS novo (ex.: botão sem estilo).
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_FILES))
+      .then(cache => cache.addAll(STATIC_FILES.map(url => new Request(url, { cache: 'reload' }))))
   );
 });
 
@@ -70,31 +72,29 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Rede primeiro: com internet, cada página e arquivo vem do servidor (revalidado,
+// então HTML e CSS são sempre da mesma versão) e a cópia do cache é atualizada.
+// Sem internet, usa a cópia guardada.
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+  const isPage = event.request.mode === 'navigate';
 
   event.respondWith(
-    // Navegações ignoram a query string: fresamento.html?calc=rpm e
-    // detalhe-rosca.html?passo=... usam o mesmo HTML pré-cacheado.
-    caches.match(event.request, { ignoreSearch: event.request.mode === 'navigate' }).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
-          return response;
-        }
+    fetch(url.href, { cache: 'no-cache', credentials: 'same-origin' }).then(response => {
+      if (response && response.status === 200 && response.type === 'basic') {
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-        return Response.error();
-      });
-    })
+      }
+      return response;
+    }).catch(() =>
+      // Navegações ignoram a query string: fresamento.html?calc=rpm e
+      // detalhe-rosca.html?passo=... usam o mesmo HTML pré-cacheado.
+      caches.match(event.request, { ignoreSearch: isPage }).then(cached =>
+        cached || (isPage ? caches.match('./index.html') : Response.error())
+      )
+    )
   );
 });
