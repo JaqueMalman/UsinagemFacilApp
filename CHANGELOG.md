@@ -2,6 +2,10 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.23 — Cabeçalho
+- Tocar em "USINAGEM FÁCIL" no topo das telas volta para a tela inicial.
+- Cache PWA v1.23.
+
 ## v1.22 — Conversões
 - Botão da fórmula passa a dizer "Ver como é calculado" e muda para "Ocultar fórmula" quando aberto.
 - A figura das réguas saiu do topo e fica dentro da explicação da fórmula.

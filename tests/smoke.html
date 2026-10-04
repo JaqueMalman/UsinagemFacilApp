@@ -181,6 +181,7 @@ const pages = {
       frame.contentWindow.addEventListener('error', e => errors.push(e.message));
       const nav = doc.querySelectorAll('nav.bottom-nav a');
       log(url.split('?')[0], 'nav', `${nav.length} abas | ativa: ${doc.querySelector('nav.bottom-nav a.active small')?.textContent ?? 'nenhuma'}`);
+      log(url.split('?')[0], 'marca', doc.querySelector('.topbar a.brand, .topbar .brand-link')?.getAttribute('href') ?? 'sem link');
       await test();
       if (errors.length) log(url, 'ERROS', errors.join(' / '));
     } catch (e) {
