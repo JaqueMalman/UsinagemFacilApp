@@ -97,6 +97,10 @@ const pages = {
     log('avanco', 'alerta rpm', text('#feedSafetyAlert strong'));
     $('#fz').value = ''; await click('#calculateFeed');
     log('avanco', 'inválido', `${text('#feedResult strong')} | ${text('#feedError')} | ${text('#feedSummary')}`);
+    log('avanco', 'botão fórmula', text('#toggleFeedFormula'));
+    await click('#dontKnow');
+    log('avanco', 'ajuda facas', !$('#teethHelp').hidden);
+    log('avanco', 'figura dentro da ajuda', !!$('#teethHelp .feed-visual') + ' | figura no topo: ' + !!$('.feed-hero .feed-visual'));
   },
   async 'conversoes.html'(){
     const run = async (mode, v) => {

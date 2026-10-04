@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.27`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.28`;
 
 const STATIC_FILES = [
   './',

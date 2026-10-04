@@ -34,4 +34,4 @@ document.querySelector('#calculateFeed').onclick = () => {
   summary.textContent = `Cálculo: ${formatNumber(n)} RPM × ${z} facas × ${formatNumber(fz)} mm/faca.`;
   result.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
-toggle.onclick = () => { formula.hidden = !formula.hidden; toggle.textContent = formula.hidden ? 'ⓘ Ver como foi calculado' : 'ⓘ Ocultar fórmula'; };
+toggle.onclick = () => { formula.hidden = !formula.hidden; toggle.textContent = formula.hidden ? 'ⓘ Ver como é calculado' : 'ⓘ Ocultar fórmula'; };

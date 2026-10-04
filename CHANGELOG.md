@@ -2,6 +2,11 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.28 — Avanço de fresamento
+- Mesmo padrão do fresamento: a figura da fresa saiu do topo e fica dentro da ajuda "Não sei onde ver o número de facas", abaixo da explicação.
+- Botão da fórmula passa a dizer "Ver como é calculado".
+- Cache PWA v1.28.
+
 ## v1.27 — Modo offline
 - Com internet, o app passa a buscar cada página e arquivo no servidor e só usa a cópia guardada quando está sem internet. Antes ele usava sempre a cópia guardada, e uma cópia desatualizada deixava páginas como Tabelas e Aprender sem formatação ao navegar entre telas, mesmo com o Cmd+Shift+R funcionando.
 - Cache PWA v1.27.
