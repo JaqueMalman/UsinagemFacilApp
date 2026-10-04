@@ -2,6 +2,11 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.19 — Tela inicial
+- Removida a seção "★ Consultas rápidas", que confundia os usuários. As mesmas funções continuam nos cards principais e na pesquisa.
+- A tela inicial não carrega mais os dados de roscas.
+- Cache PWA v1.19.
+
 ## v1.18 — Pastas e navegação compartilhada
 - Arquivos organizados em `css/`, `js/` (`lib/`, `pages/`) e `data/`. Os `.html` continuam na raiz, então os links e favoritos dos usuários não mudam.
 - Cada página carrega `js/common.js` (navegação, vibração ao toque, modo offline) e o próprio script em `js/pages/<página>.js`.

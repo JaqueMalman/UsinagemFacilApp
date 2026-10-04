@@ -39,10 +39,7 @@ const pages = {
     log('index', 'busca rosca', `${$$('.action-card:not(.is-hidden)').length} visíveis | ${text('#searchFeedback')}`);
     await type('#search', 'zzzz');
     log('index', 'busca vazia', text('#searchFeedback'));
-    const m8 = $('.quick-card[data-thread]');
-    log('index', 'atalho rosca', `${m8.querySelector('b').textContent} | ${m8.querySelector('small').textContent} | ${decodeURIComponent(m8.dataset.href)}`);
-    await click(m8); await wait(300);
-    log('index', 'atalho abre', `${frame.contentWindow.location.pathname.split('/').pop()} | ${text('#detailTitle')} | broca ${text('#drillValue')}`);
+    log('index', 'consultas rápidas', $('#rapidas-title') ? 'presente' : 'removida');
   },
   async 'fresamento.html?calc=rpm'(){
     const run = async (mode, vals) => {
