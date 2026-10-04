@@ -30,6 +30,20 @@ test('roscas recentes sem duplicatas e limitadas a 8', () => {
   assert.equal(history.recentThreads().length, 8);
 });
 
+test('removeRecentThread tira só a rosca escolhida', () => {
+  history.addRecentThread(m8); history.addRecentThread(m10);
+  history.removeRecentThread(m8);
+  assert.deepEqual(history.recentThreads().map(r => r.passo), ['10x1,50']);
+});
+
+test('clearThreads apaga favoritos e recentes, mas não os cálculos', () => {
+  history.toggleFavorite(m8); history.addRecentThread(m10); history.addRecentCalc({ href: 'a.html', label: 'A' });
+  history.clearThreads();
+  assert.deepEqual(history.favorites(), []);
+  assert.deepEqual(history.recentThreads(), []);
+  assert.equal(history.recentCalcs().length, 1);
+});
+
 test('cálculos recentes limitados a 6, sem repetir o mesmo link', () => {
   history.addRecentCalc({ href: 'a.html', label: 'A' });
   history.addRecentCalc({ href: 'a.html', label: 'A' });

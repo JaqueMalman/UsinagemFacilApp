@@ -19,6 +19,15 @@ export function toggleFavorite(t) {
 
 export function isFavorite(t) { return read(K.fav).some(x => key(x) === key(t)); }
 
+export function removeRecentThread(t) {
+  write(K.recentT, read(K.recentT).filter(x => key(x) !== key(t)));
+}
+
+// Apaga favoritos e roscas recentes de uma vez.
+export function clearThreads() {
+  write(K.fav, []); write(K.recentT, []);
+}
+
 export function addRecentThread(t) {
   const a = read(K.recentT).filter(x => key(x) !== key(t));
   a.unshift({ tipo: t.tipo, passo: t.passo, broca: t.broca || null, at: Date.now() });

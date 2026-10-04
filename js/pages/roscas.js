@@ -21,13 +21,34 @@ function renderSaved(){
   const items = [...fav, ...rec].slice(0, 8);
   box.innerHTML = ''; sec.hidden = !items.length;
   items.forEach(r => {
+    const wrap = document.createElement('div'); wrap.className = 'saved-thread-wrap';
     const b = document.createElement('button');
     b.className = 'saved-thread-chip'; b.type = 'button';
     b.innerHTML = `<span>${r._fav ? '⭐' : '🕘'}</span><b>${threadLabel(r)}</b><small>${r.tipo}</small>`;
     b.onclick = () => openDetail(r);
-    box.appendChild(b);
+    const del = document.createElement('button'); del.className = 'saved-delete'; del.type = 'button';
+    del.textContent = '🗑';
+    del.setAttribute('aria-label', `${r._fav ? 'Tirar dos favoritos' : 'Tirar do histórico'}: ${threadLabel(r)}`);
+    del.onclick = () => {
+      if (r._fav) history.toggleFavorite(r); else history.removeRecentThread(r);
+      renderSaved(); render();
+    };
+    wrap.append(b, del); box.appendChild(wrap);
   });
 }
+
+// "Limpar tudo" pede um segundo toque para confirmar.
+const clearSaved = document.querySelector('#clearSaved');
+let clearTimer;
+if (clearSaved) clearSaved.onclick = () => {
+  if (!clearSaved.classList.contains('confirm')) {
+    clearSaved.classList.add('confirm'); clearSaved.textContent = 'Toque de novo para apagar';
+    clearTimer = setTimeout(resetClear, 4000);
+    return;
+  }
+  history.clearThreads(); resetClear(); renderSaved(); render();
+};
+function resetClear(){ clearTimeout(clearTimer); clearSaved.classList.remove('confirm'); clearSaved.textContent = '🗑 Limpar tudo'; }
 
 function render(){
   const q = normalizeThread(search.value);

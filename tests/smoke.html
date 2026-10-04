@@ -127,6 +127,15 @@ const pages = {
     log('roscas', 'busca m8x1,25', `${text('#resultCount')} | ${$$('.thread-result b').map(b => b.textContent).join(', ')} | ${text('#threadFeedback')}`);
     await type('#threadSearch', 'xyz');
     log('roscas', 'busca sem resultado', `${text('#resultCount')} | vazio visível: ${!$('#emptyThread').hidden}`);
+    await type('#threadSearch', 'm8x1,25');
+    await click('.favorite-star'); await type('#threadSearch', 'm10x1,50'); await click('.favorite-star');
+    log('roscas', 'favoritos', `${$$('.saved-thread-chip b').map(b => b.textContent).join(', ')} | seção visível: ${!$('#savedThreads').hidden}`);
+    await click('.saved-delete');
+    log('roscas', 'lixeira no 1º', `${$$('.saved-thread-chip b').map(b => b.textContent).join(', ')} | estrela M10: ${text('.favorite-star')}`);
+    await click('#clearSaved');
+    log('roscas', 'limpar 1º toque', `${text('#clearSaved')} | ${$$('.saved-thread-chip').length} cards`);
+    await click('#clearSaved');
+    log('roscas', 'limpar 2º toque', `${$$('.saved-thread-chip').length} cards | seção visível: ${!$('#savedThreads').hidden}`);
   },
   async 'detalhe-rosca.html?passo=8x1%2C25&tipo=M%20Rosca%20ISO%20M%C3%A9trica%20Grossa%2060%C2%B0'(){
     log('detalhe', 'M8', `${text('#detailTitle')} | ${text('#detailType')} | broca ${text('#drillValue')} | ${text('#diameterValue')} | ${text('#pitchValue')} | ${text('#technicalText')}`);

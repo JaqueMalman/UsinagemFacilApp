@@ -2,6 +2,12 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.29 — Roscas
+- "Favoritos e recentes": cada card ganha uma lixeira 🗑 para tirar só aquela rosca (favorita sai dos favoritos, recente sai do histórico).
+- Novo botão "🗑 Limpar tudo", que pede um segundo toque para confirmar.
+- Uma linha explica que ⭐ são favoritas, 🕘 são vistas recentemente e que tudo fica só neste aparelho.
+- Cache PWA v1.29.
+
 ## v1.28 — Avanço de fresamento
 - Mesmo padrão do fresamento: a figura da fresa saiu do topo e fica dentro da ajuda "Não sei onde ver o número de facas", abaixo da explicação.
 - Botão da fórmula passa a dizer "Ver como é calculado".
