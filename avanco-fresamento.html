@@ -12,11 +12,11 @@
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <title>Usinagem Fácil — Avanço de Fresamento</title>
-<link href="styles.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header class="topbar">
-<div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div>
+<a aria-label="Ir para a tela inicial" class="brand" href="index.html"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></a>
 <a aria-label="Voltar ao fresamento" class="icon-button back-link" href="fresamento.html">‹</a>
 </header>
 <main class="feed-main">
@@ -24,45 +24,49 @@
 <div class="eyebrow">➡️ AVANÇO DE FRESAMENTO</div>
 <h1>Vamos calcular o avanço</h1>
 <p>Informe 3 coisas. O aplicativo faz a conta para você.</p>
+</section>
+<section class="feed-card">
+<div class="feed-step"><span>1</span><div><b>Quantas facas tem a ferramenta?</b><small>Toque no número. É a quantidade de dentes/cortes da fresa.</small></div></div>
+<div aria-label="Número de facas" class="teeth-picker" id="teethPicker" role="group">
+<button aria-pressed="false" data-z="2" type="button">2<small>facas</small></button><button aria-pressed="false" data-z="3" type="button">3<small>facas</small></button><button class="active" aria-pressed="true" data-z="4" type="button">4<small>facas</small></button><button aria-pressed="false" data-z="5" type="button">5<small>facas</small></button><button aria-pressed="false" data-z="6" type="button">6<small>facas</small></button>
+</div>
+<button class="diameter-help-btn" id="dontKnow" type="button">💡 Não sei onde ver o número de facas</button>
+<div class="diameter-help" hidden="" id="teethHelp"><b>Conte os dentes na ponta da fresa.</b><p>Olhe a ponta da fresa e conte quantos dentes/cortes trabalham ao redor dela. Cada dente é uma “faca”. Na figura abaixo, a fresa tem <strong>4 facas</strong> (em verde).</p>
 <div aria-label="Ilustração de fresa com quatro facas e sentido de avanço" class="feed-visual">
 <div class="feed-cutter" id="feedCutter"><i></i><i></i><i></i><i></i></div>
 <div class="rotation-label">↻ gira</div>
 <div class="feed-piece"></div>
 <div class="feed-direction">AVANÇO →</div>
 </div>
-</section>
-<section class="feed-card">
-<div class="feed-step"><span>1</span><div><b>Quantas facas tem a ferramenta?</b><small>Toque no número. É a quantidade de dentes/cortes da fresa.</small></div></div>
-<div aria-label="Número de facas" class="teeth-picker" id="teethPicker" role="group">
-<button data-z="2" type="button">2<small>facas</small></button><button data-z="3" type="button">3<small>facas</small></button><button class="active" data-z="4" type="button">4<small>facas</small></button><button data-z="5" type="button">5<small>facas</small></button><button data-z="6" type="button">6<small>facas</small></button>
 </div>
-<button class="dont-know" id="dontKnow" type="button">💡 Não sei onde ver o número de facas</button>
-<div class="teeth-help" hidden="" id="teethHelp"><b>Como identificar?</b><p>Olhe a ponta da fresa e conte quantos dentes/cortes trabalham ao redor dela. Cada dente é uma “faca”. Na ilustração acima, destacamos 4.</p></div>
 </section>
 <section class="feed-card">
 <div class="feed-step"><span>2</span><div><b>Qual a rotação da ferramenta?</b><small>Digite o RPM que será usado na máquina.</small></div></div>
-<label class="feed-input"><input aria-label="Rotação" id="rpm" inputmode="decimal" placeholder="Ex.: 3180"/><strong>RPM</strong></label>
+<label class="feed-input"><input aria-describedby="feedError" aria-label="Rotação" enterkeyhint="done" id="rpm" inputmode="decimal" placeholder="Ex.: 3180"/><strong>RPM</strong></label>
 </section>
 <section class="feed-card">
 <div class="feed-step"><span>3</span><div><b>Qual o avanço por faca (fz)?</b><small>Use o valor recomendado para a ferramenta/processo.</small></div></div>
-<label class="feed-input"><input aria-label="Avanço por faca" id="fz" inputmode="decimal" placeholder="Ex.: 0,08"/><strong>mm/faca</strong></label>
+<label class="feed-input"><input aria-describedby="feedError" aria-label="Avanço por faca" enterkeyhint="done" id="fz" inputmode="decimal" placeholder="Ex.: 0,08"/><strong>mm/faca</strong></label>
 <div class="source-note">📘 Este valor deve vir do catálogo, fabricante ou processo definido.</div>
 </section>
 <section class="feed-action">
 <button class="big-calc-btn" id="calculateFeed" type="button">🧮 CALCULAR AVANÇO</button>
-<div aria-live="polite" class="calc-error" id="feedError"></div>
+<div class="calc-error" id="feedError" role="alert"></div>
 <div aria-live="polite" aria-atomic="true" class="feed-result empty" id="feedResult"><small>COLOQUE NA MÁQUINA</small><strong>—</strong><span>mm/min</span><p id="feedSummary">Preencha os dados acima.</p></div>
+<div class="safety-slot" id="feedSafetyAlert" hidden></div>
+</section>
+<section class="calc-history feed-history" hidden="" id="calcHistory">
+<div class="section-heading"><h2>🕘 Últimos cálculos</h2><button class="saved-clear" id="calcHistoryClear" type="button">🗑 Limpar tudo</button></div>
+<p class="saved-hint">Os 5 últimos cálculos feitos neste aparelho. Toque em um para refazer ou na 🗑 para tirar.</p>
+<div class="calc-history-list" id="calcHistoryList"></div>
 </section>
 <section class="learn-formula feed-formula">
-<button id="toggleFeedFormula" type="button">ⓘ Ver como foi calculado</button>
+<button id="toggleFeedFormula" type="button">ⓘ Ver como é calculado</button>
 <div class="formula-box" hidden="" id="feedFormula"><b>Fórmula da tabela técnica</b><p>vf = n × z × fz</p><small>vf = avanço por minuto · n = RPM · z = número de facas · fz = avanço por faca</small></div>
 </section>
 <div class="info-strip"><span>⚠️</span><div><b>O cálculo não escolhe o avanço por faca.</b><p>Ele calcula o avanço por minuto a partir do valor de fz informado. O fz adequado depende da ferramenta e do processo.</p></div></div>
 </main>
-<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script defer="" src="safety-limits.js"></script>
-<script defer="" src="avanco-fresamento.js"></script>
-<script defer="" src="haptics.js"></script>
-<script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script type="module" src="js/pages/avanco-fresamento.js"></script><script type="module" src="js/common.js"></script>
 </body>
 </html>

@@ -5,8 +5,8 @@
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
 <link href="manifest.webmanifest" rel="manifest"/>
-<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/><title>Usinagem Fácil — Detalhe da Rosca</title><link href="styles.css" rel="stylesheet"/></head>
-<body><header class="topbar"><div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div><a aria-label="Voltar para roscas" class="icon-button back-link" href="roscas.html">‹</a></header>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/><title>Usinagem Fácil — Detalhe da Rosca</title><link href="css/styles.css" rel="stylesheet"/></head>
+<body><header class="topbar"><a aria-label="Ir para a tela inicial" class="brand" href="index.html"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></a><a aria-label="Voltar para roscas" class="icon-button back-link" href="roscas.html">‹</a></header>
 <main class="detail-main" id="detailContent">
 <section class="detail-hero"><nav aria-label="Caminho de navegação" class="detail-breadcrumb"><a href="index.html">Início</a><span aria-hidden="true">›</span><a href="roscas.html">Roscas</a><span aria-hidden="true">›</span><span aria-current="page">Detalhe</span></nav><div class="detail-title-row"><div class="detail-thread-icon">🔩</div><div><h1 id="detailTitle">—</h1><p id="detailType">Carregando...</p></div></div>
 <div class="visual-thread"><div aria-label="Ilustração didática de uma rosca" class="thread-illustration"><div class="thread-bolt"></div><span class="dim-line dim-diameter" id="diameterTag">Diâmetro</span><span class="dim-line dim-pitch" id="pitchTag">Passo</span></div>
@@ -16,7 +16,6 @@
 <button class="learn-box" id="learnButton" type="button"><b>💡 Não entendeu a medida?</b><span id="learnText">Toque aqui para uma explicação simples.</span></button>
 <details class="technical-box"><summary>ⓘ Ver informação técnica</summary><p id="technicalText"></p><div class="warning-note">A ilustração é didática e não está em escala. Confira a identificação da ferramenta e a tabela técnica antes da operação.</div></details>
 </main>
-<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script defer="" src="technical-data.js"></script><script defer="" src="data.js"></script><script defer="" src="detalhe-rosca.js"></script> <script defer="" src="haptics.js"></script>
-<script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script defer="" src="data/technical-data.js"></script><script defer="" src="data/data.js"></script><script type="module" src="js/pages/detalhe-rosca.js"></script> <script type="module" src="js/common.js"></script>
 </body></html>

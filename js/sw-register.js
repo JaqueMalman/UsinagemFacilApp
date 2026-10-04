@@ -3,6 +3,10 @@
 
   let refreshing = false;
   let waitingWorker = null;
+  let updateRequested = false;
+  // Na primeira visita não há controlador; o clients.claim() do sw.js dispara
+  // controllerchange e não deve recarregar a página.
+  const hadController = !!navigator.serviceWorker.controller;
 
   function ensureBanner() {
     let banner = document.getElementById('pwa-update-banner');
@@ -29,6 +33,7 @@
       if (!waitingWorker) return;
       banner.querySelector('.pwa-update-now').disabled = true;
       banner.querySelector('.pwa-update-now').textContent = 'Atualizando…';
+      updateRequested = true;
       waitingWorker.postMessage({ type: 'SKIP_WAITING' });
     });
     banner.querySelector('.pwa-update-later').addEventListener('click', () => {
@@ -72,7 +77,7 @@
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (refreshing) return;
+    if (refreshing || (!hadController && !updateRequested)) return;
     refreshing = true;
     window.location.reload();
   });

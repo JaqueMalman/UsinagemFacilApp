@@ -1,39 +1,48 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.15`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.33`;
 
 const STATIC_FILES = [
   './',
   './index.html',
-  './roscas.html',
-  './detalhe-rosca.html',
-  './furos.html',
-  './fresamento.html',
-  './avanco-fresamento.html',
-  './torneamento.html',
-  './conversoes.html',
-  './calculadoras.html',
-  './tabelas.html',
   './aprender.html',
   './auditoria-tecnica.html',
-  './auditoria-tecnica.js',
-  './styles.css',
-  './app.js',
-  './performance-utils.js',
-  './roscas.js',
-  './detalhe-rosca.js',
-  './fresamento.js',
-  './avanco-fresamento.js',
-  './torneamento.js',
-  './conversoes.js',
-  './tabelas.js',
-  './aprender.js',
-  './data.js',
-  './technical-data.js',
-  './sw-register.js',
-  './haptics.js',
-  './user-history.js',
-  './calculator-history.js',
-  './safety-limits.js',
+  './avanco-fresamento.html',
+  './calculadoras.html',
+  './conversoes.html',
+  './detalhe-rosca.html',
+  './fresamento.html',
+  './furos.html',
+  './roscas.html',
+  './tabelas.html',
+  './torneamento.html',
+  './css/styles.css',
+  './js/common.js',
+  './js/nav.js',
+  './js/sw-register.js',
+  './js/lib/calc-history.js',
+  './js/lib/calculator.js',
+  './js/lib/confirm.js',
+  './js/lib/formulas.js',
+  './js/lib/haptics.js',
+  './js/lib/history.js',
+  './js/lib/milling-calcs.js',
+  './js/lib/numbers.js',
+  './js/lib/safety.js',
+  './js/lib/text.js',
+  './js/lib/threads.js',
+  './js/pages/aprender.js',
+  './js/pages/auditoria-tecnica.js',
+  './js/pages/avanco-fresamento.js',
+  './js/pages/calculadoras.js',
+  './js/pages/conversoes.js',
+  './js/pages/detalhe-rosca.js',
+  './js/pages/fresamento.js',
+  './js/pages/index.js',
+  './js/pages/roscas.js',
+  './js/pages/tabelas.js',
+  './js/pages/torneamento.js',
+  './data/technical-data.js',
+  './data/data.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -42,8 +51,10 @@ const STATIC_FILES = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
+    // cache: 'reload' ignora o cache HTTP do navegador. Sem isso, uma versão nova
+    // pode guardar um HTML antigo junto com o CSS novo (ex.: botão sem estilo).
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_FILES))
+      .then(cache => cache.addAll(STATIC_FILES.map(url => new Request(url, { cache: 'reload' }))))
   );
 });
 
@@ -64,29 +75,27 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Cache primeiro: cada versão do app é um conjunto completo, baixado de uma vez na
+// instalação (com cache: 'reload'). Assim página, CSS e scripts são sempre da mesma
+// versão. A versão nova só passa a valer quando o operador toca em "Atualizar agora"
+// (ou fecha todas as abas do app). Arquivo fora do conjunto vem da rede e é guardado.
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+  const isPage = event.request.mode === 'navigate';
+  // Páginas são guardadas e procuradas sem a query string: fresamento.html?calc=rpm,
+  // detalhe-rosca.html?passo=... e ?refazer=... usam o mesmo HTML.
+  const cacheKey = isPage ? url.origin + url.pathname : event.request;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.open(CACHE_NAME).then(cache => cache.match(cacheKey).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
-          return response;
-        }
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        if (response && response.status === 200 && response.type === 'basic') cache.put(cacheKey, response.clone());
         return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-        return Response.error();
-      });
-    })
+      }).catch(() => (isPage ? cache.match('./index.html') : Response.error()));
+    }))
   );
 });

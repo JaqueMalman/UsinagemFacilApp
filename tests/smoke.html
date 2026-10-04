@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Teste de fumaça — Usinagem Fácil</title>
+<style>iframe{width:420px;height:800px;border:1px solid #ccc}pre{white-space:pre-wrap}</style>
+</head>
+<body>
+<!--
+  Abre cada página do app num iframe, interage com ela e registra o que aparece na tela.
+  Uso: node tests/run-smoke.mjs (sobe um servidor local e roda no Chrome headless).
+  Também pode ser aberto à mão em http://localhost:<porta>/tests/smoke.html.
+-->
+<pre id="OUT">rodando…</pre>
+<iframe id="frame" title="página em teste"></iframe>
+<script>
+const frame = document.getElementById('frame');
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const results = [];
+let doc;
+
+function load(url){
+  return new Promise(resolve => {
+    frame.onload = async () => { doc = frame.contentDocument; await wait(150); resolve(); };
+    frame.src = '../' + url;
+  });
+}
+const $ = s => doc.querySelector(s);
+const $$ = s => [...doc.querySelectorAll(s)];
+const text = s => ($(s)?.textContent ?? '∅').replace(/\s+/g, ' ').trim();
+async function type(s, v){ const el = $(s); el.value = v; el.dispatchEvent(new Event('input', {bubbles:true})); await wait(150); }
+async function click(s){ (typeof s === 'string' ? $(s) : s).click(); await wait(50); }
+async function key(s, k){ $(s).dispatchEvent(new KeyboardEvent('keydown', {key: k, bubbles: true})); await wait(50); }
+function log(page, name, value){ results.push(`${page} | ${name} => ${value}`); }
+
+const pages = {
+  async 'index.html'(){
+    log('index', 'cards', $$('.action-card').length);
+    await type('#search', 'rosca');
+    log('index', 'busca rosca', `${$$('.action-card:not(.is-hidden)').length} visíveis | ${text('#searchFeedback')}`);
+    await type('#search', 'zzzz');
+    log('index', 'busca vazia', text('#searchFeedback'));
+    log('index', 'consultas rápidas', $('#rapidas-title') ? 'presente' : 'removida');
+  },
+  async 'fresamento.html?calc=rpm'(){
+    const run = async (mode, vals) => {
+      await click(`.milling-option[data-calc="${mode}"]`);
+      for (const [id, v] of Object.entries(vals)) $('#' + id).value = v;
+      await click('#doCalc');
+      return `${text('#result strong')} ${text('#result span')} | erro: ${text('#calcError')} | alerta: ${text('#safetyAlert strong')}`;
+    };
+    log('fresamento', 'modo inicial', $('.milling-option.active')?.dataset.calc);
+    log('fresamento', 'rpm 100/10', await run('rpm', {vc:'100', dc:'10'}));
+    log('fresamento', 'rpm 300/10 (alerta)', await run('rpm', {vc:'300', dc:'10'}));
+    log('fresamento', 'rpm 1000/10 (perigo)', await run('rpm', {vc:'1000', dc:'10'}));
+    log('fresamento', 'vf 3.180/0,10', await run('vf', {n:'3.180', f:'0,10'}));
+    log('fresamento', 'fz 1000/3000/4', await run('fz', {vf:'1000', n:'3000', z:'4'}));
+    log('fresamento', 'vc 10/3180', await run('vc', {dc:'10', n:'3180'}));
+    await run('rpm', {vc:'300', dc:'10'});
+    $('#vc').value = 'abc'; await click('#doCalc');
+    log('fresamento', 'inválido após resultado', `${text('#result strong')} | erro: ${text('#calcError')} | alerta oculto: ${$('#safetyAlert').hidden}`);
+    log('fresamento', 'botão fórmula', text('#toggleFormula'));
+    await click('#toggleFormula');
+    log('fresamento', 'fórmula', `${!$('#formulaBox').hidden} ${text('#formulaBox p')}`);
+    log('fresamento', 'ajuda logo após a fórmula', $('#formulaBox').nextElementSibling?.id);
+    await click('#diameterHelp');
+    log('fresamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
+    log('fresamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .milling-visual') + ' | figura no topo: ' + !!$('.milling-hero .milling-visual'));
+    log('fresamento', 'fz com 0,5 faca', await run('fz', {vf:'1000', n:'3000', z:'0,5'}) + ` | campo z inválido: ${$('#z').getAttribute('aria-invalid')}`);
+    await click('.milling-option[data-calc="rpm"]'); $('#vc').value = '100'; $('#dc').value = '10'; await key('#dc', 'Enter');
+    log('fresamento', 'Enter calcula', `${text('#result strong')} | pressionado: ${$$('.milling-option[aria-pressed="true"]').map(b => b.dataset.calc).join(',')}`);
+    log('fresamento', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | visível: ${!$('#calcHistory').hidden}`);
+    await click('.calc-history-item:nth-child(2) .calc-history-open');
+    log('fresamento', 'refazer do histórico', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')} | 1º: ${text('.calc-history-open b')}`);
+    await click('.calc-history-item .saved-delete');
+    log('fresamento', 'lixeira', `${$$('.calc-history-item').length} cálculos`);
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
+    log('fresamento', 'limpar tudo', `${$$('.calc-history-item').length} cálculos | visível: ${!$('#calcHistory').hidden}`);
+  },
+  async 'torneamento.html?calc=vc'(){
+    const run = async (mode, vals) => {
+      await click(`.turning-option[data-calc="${mode}"]`);
+      for (const [id, v] of Object.entries(vals)) $('#turn-' + id).value = v;
+      await click('#doTurningCalc');
+      return `${text('#turningResult strong')} ${text('#turningResult span')} | ${text('#turningResult p')} | erro: ${text('#turningError')} | alerta: ${text('#turningSafetyAlert strong')}`;
+    };
+    log('torneamento', 'modo inicial', $('.turning-option.active')?.dataset.calc);
+    log('torneamento', 'rpm 150/50', await run('rpm', {vc:'150', d:'50'}));
+    log('torneamento', 'rpm 150/5 (alerta)', await run('rpm', {vc:'150', d:'5'}));
+    log('torneamento', 'vf 955/0,2', await run('vf', {n:'955', f:'0,2'}));
+    log('torneamento', 'vc 50/955', await run('vc', {d:'50', n:'955'}));
+    $('#turn-d').value = ''; await click('#doTurningCalc');
+    log('torneamento', 'inválido após resultado', `${text('#turningResult strong')} | erro: ${text('#turningError')}`);
+    log('torneamento', 'botão fórmula', text('#toggleTurningFormula'));
+    await click('#toggleTurningFormula');
+    log('torneamento', 'fórmula aberta', `${text('#toggleTurningFormula')} | ${text('#turningFormulaBox p')}`);
+    log('torneamento', 'ajuda logo após a fórmula', $('#turningFormulaBox').nextElementSibling?.id);
+    await click('#diameterHelp');
+    log('torneamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
+    log('torneamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .turning-visual') + ' | figura no topo: ' + !!$('.turning-hero .turning-visual'));
+  },
+  async 'avanco-fresamento.html'(){
+    $('#rpm').value = '3000'; $('#fz').value = '0,1'; await click('#calculateFeed');
+    log('avanco', 'z=4 padrão', `${text('#feedResult strong')} | ${text('#feedSummary')}`);
+    await click('#teethPicker button[data-z="2"]'); await click('#calculateFeed');
+    log('avanco', 'z=2', text('#feedResult strong'));
+    $('#rpm').value = '7000'; await click('#calculateFeed');
+    log('avanco', 'alerta rpm', text('#feedSafetyAlert strong'));
+    $('#fz').value = ''; await click('#calculateFeed');
+    log('avanco', 'inválido', `${text('#feedResult strong')} | ${text('#feedError')} | ${text('#feedSummary')}`);
+    log('avanco', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | 1º: ${text('.calc-history-open span')}`);
+    await click('.calc-history-item:nth-child(2) .calc-history-open');
+    log('avanco', 'refazer do histórico', `${$('#teethPicker .active')?.dataset.z} facas | ${$('#rpm').value} RPM | ${text('#feedResult strong')}`);
+    await click('.calc-history-item .saved-delete');
+    log('avanco', 'lixeira', `${$$('.calc-history-item').length} cálculos`);
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
+    log('avanco', 'limpar tudo', `${$$('.calc-history-item').length} cálculos | visível: ${!$('#calcHistory').hidden}`);
+    log('avanco', 'botão fórmula', text('#toggleFeedFormula'));
+    await click('#dontKnow');
+    log('avanco', 'ajuda facas', !$('#teethHelp').hidden);
+    log('avanco', 'figura dentro da ajuda', !!$('#teethHelp .feed-visual') + ' | figura no topo: ' + !!$('.feed-hero .feed-visual'));
+  },
+  async 'conversoes.html'(){
+    const run = async (mode, v) => {
+      await click(`[data-mode="${mode}"]`); $('#conversionInput').value = v; await click('#convertBtn');
+      return `${text('#conversionResult strong')} | ${text('#resultExtra')} | erro: ${text('#conversionError')}`;
+    };
+    for (const v of ['1/2', '1 1/2', '0,5', '']) log('conversoes', `pol "${v}"`, await run('in-mm', v));
+    for (const v of ['12,7', '12.700', '25,4 mm', '10', '12,71', '0,01', 'abc']) log('conversoes', `mm "${v}"`, await run('mm-in', v));
+    log('conversoes', 'aria', `modo pressionado: ${$('.conversion-mode[aria-pressed="true"]')?.dataset.mode} | campo inválido: ${$('#conversionInput').getAttribute('aria-invalid')}`);
+    log('conversoes', 'grade', $$('#fractionGrid button').length + ' botões, 1º: ' + text('#fractionGrid button small'));
+    await click('#fractionGrid button:nth-child(4)');
+    log('conversoes', 'grade 1/4', text('#conversionResult strong'));
+    log('conversoes', 'botão fórmula', text('#toggleFormula'));
+    await click('#toggleFormula');
+    log('conversoes', 'fórmula aberta', `${text('#toggleFormula')} | ${text('#formulaText')}`);
+    log('conversoes', 'figura dentro da fórmula', !!$('#formulaBox .conversion-visual') + ' | figura no topo: ' + !!$('.conversion-hero .conversion-visual'));
+  },
+  async 'roscas.html'(){
+    log('roscas', 'inicial', `${text('#resultCount')} | 1º: ${text('.thread-result b')} ${text('.thread-result .drill-mini')}`);
+    await click('.thread-type[data-filter="M Rosca ISO Métrica Fina"]');
+    log('roscas', 'fina', `${text('#resultCount')} | 1º: ${text('.thread-result b')}`);
+    await click('.thread-type[data-filter="Rosca UNC / Grossa 60°"]');
+    log('roscas', 'unc', `${text('#resultCount')} | 1º: ${text('.thread-result b')} ${text('.thread-result .drill-mini')}`);
+    await type('#threadSearch', 'm8x1,25');
+    log('roscas', 'busca m8x1,25', `${text('#resultCount')} | ${$$('.thread-result b').map(b => b.textContent).join(', ')} | ${text('#threadFeedback')}`);
+    await type('#threadSearch', 'xyz');
+    log('roscas', 'busca sem resultado', `${text('#resultCount')} | vazio visível: ${!$('#emptyThread').hidden}`);
+    await type('#threadSearch', 'm8x1,25');
+    await click('.favorite-star'); await type('#threadSearch', 'm10x1,50'); await click('.favorite-star');
+    log('roscas', 'favoritos', `${$$('.saved-thread-chip b').map(b => b.textContent).join(', ')} | seção visível: ${!$('#savedThreads').hidden}`);
+    await click('.saved-delete');
+    log('roscas', 'lixeira no 1º', `${$$('.saved-thread-chip b').map(b => b.textContent).join(', ')} | estrela M10: ${text('.favorite-star')}`);
+    await click('#clearSaved');
+    log('roscas', 'limpar 1º toque', `${text('#clearSaved')} | ${$$('.saved-thread-chip').length} cards`);
+    await click('#clearSaved');
+    log('roscas', 'limpar 2º toque', `${$$('.saved-thread-chip').length} cards | seção visível: ${!$('#savedThreads').hidden}`);
+  },
+  async 'detalhe-rosca.html?passo=8x1%2C25&tipo=M%20Rosca%20ISO%20M%C3%A9trica%20Grossa%2060%C2%B0'(){
+    log('detalhe', 'M8', `${text('#detailTitle')} | ${text('#detailType')} | broca ${text('#drillValue')} | ${text('#diameterValue')} | ${text('#pitchValue')} | ${text('#technicalText')}`);
+  },
+  async 'detalhe-rosca.html?passo=UNC%201%2F4-20&tipo=Rosca%20UNC%20%2F%20Grossa%2060%C2%B0'(){
+    log('detalhe', 'UNC 1/4', `${text('#detailTitle')} | broca ${text('#drillValue')} | ${text('#processDrill')} | ${text('#technicalText')}`);
+  },
+  async 'detalhe-rosca.html?passo=nada'(){
+    log('detalhe', 'inexistente', text('#detailContent b'));
+  },
+  async 'tabelas.html'(){
+    log('tabelas', 'inicial', `${text('#tableTitle')} | ${text('#resultCount')} | 1ª: ${text('.technical-row strong')} ${text('.technical-row span')}`);
+    for (const t of ['metric-fine', 'unc', 'bsw', 'conversion']) {
+      await click(`.table-type[data-type="${t}"]`);
+      log('tabelas', t, `${text('#tableTitle')} | ${text('#resultCount')} | ${text('#columnHead')} | 1ª: ${text('.technical-row strong')} ${text('.technical-row span')}`);
+    }
+    await type('#tableSearch', '1/2');
+    log('tabelas', 'conversão busca 1/2', `${text('#resultCount')} | ${$$('.technical-row strong').map(b => b.textContent).join(', ')}`);
+    await click('.table-type[data-type="metric-coarse"]'); await type('#tableSearch', '10');
+    log('tabelas', 'grossa busca 10', `${text('#resultCount')} | ${$$('.technical-row strong').map(b => b.textContent).slice(0, 5).join(', ')}`);
+  },
+  async 'aprender.html'(){
+    log('aprender', 'cards', $$('.learn-card').length);
+    await type('#learnSearch', 'polegada');
+    log('aprender', 'busca polegada', `${$$('.learn-card:not(.is-hidden)').length} visíveis`);
+    await type('#learnSearch', 'zzz');
+    log('aprender', 'busca vazia', `vazio visível: ${!$('#learnEmpty').classList.contains('is-hidden')}`);
+    await click('.learn-card[data-topic="fz"]');
+    await type('#learnSearch', '');
+    $('.learn-card[data-topic="fz"]').focus();
+    await click('.learn-card[data-topic="fz"]');
+    log('aprender', 'abrir fz', `${$('#learnSheet').classList.contains('open')} | ${text('#learnContent h2')} | foco: ${doc.activeElement.id}`);
+    await key('#learnSheet', 'Escape');
+    log('aprender', 'Escape', `aberta: ${$('#learnSheet').classList.contains('open')} | foco volta: ${doc.activeElement.dataset.topic}`);
+  },
+  async 'calculadoras.html'(){
+    frame.contentWindow.localStorage.removeItem('uf_recent_calcs_v1');
+    await load('calculadoras.html');
+    log('calculadoras', 'sem histórico', `seção oculta: ${$('#recentCalcs').hidden}`);
+    frame.contentWindow.localStorage.setItem('uf_recent_calcs_v1', JSON.stringify([{href:'conversoes.html', label:'Conversões'}]));
+    await load('calculadoras.html');
+    log('calculadoras', 'com histórico', `${!$('#recentCalcs').hidden} | ${text('#recentCalcList b')}`);
+    await click('#recentCalcList .saved-delete');
+    log('calculadoras', 'lixeira recente', `seção oculta: ${$('#recentCalcs').hidden}`);
+    const ls = () => frame.contentWindow.localStorage;
+    ls().setItem('uf_milling_history_v1', JSON.stringify([{mode:'rpm', inputs:{vc:'100', dc:'10'}, result:'3.183', at:2}, {mode:'vf', inputs:{n:'3000', f:'0,1'}, result:'300', at:1}]));
+    ls().setItem('uf_feed_history_v1', JSON.stringify([{mode:'vf', inputs:{z:'4', rpm:'3000', fz:'0,1'}, result:'1.200', at:3}]));
+    await load('calculadoras.html');
+    log('calculadoras', 'últimos cálculos', $$('.calc-history-open small').map(s => s.textContent).join(' | '));
+    await click('.calc-history-item .saved-delete');
+    log('calculadoras', 'lixeira cálculo', `${$$('.calc-history-item').length} | avanço salvo: ${JSON.parse(ls().getItem('uf_feed_history_v1')).length}`);
+    await load('fresamento.html?refazer=1');
+    log('calculadoras', 'refazer no fresamento', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')}`);
+    await load('calculadoras.html');
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
+    log('calculadoras', 'limpar cálculos', `${$$('.calc-history-item').length} | seção oculta: ${$('#calcHistory').hidden}`);
+    ls().removeItem('uf_recent_calcs_v1');
+  },
+  async 'auditoria-tecnica.html'(){
+    log('auditoria', 'famílias', `${$$('.family').length} | ${text('.family b')} | ${text('.family p')}`);
+    log('auditoria', 'pendentes', $$('#pending tr').length);
+  },
+  async 'furos.html'(){
+    log('furos', 'ações', $$('.hole-action').map(a => a.getAttribute('href')).join(', '));
+  },
+};
+
+(async () => {
+  // O service worker serviria arquivos antigos do cache durante o teste.
+  for (const r of await navigator.serviceWorker?.getRegistrations?.() ?? []) await r.unregister();
+  for (const [url, test] of Object.entries(pages)) {
+    try {
+      await load(url);
+      const errors = [];
+      frame.contentWindow.addEventListener('error', e => errors.push(e.message));
+      const nav = doc.querySelectorAll('nav.bottom-nav a');
+      log(url.split('?')[0], 'nav', `${nav.length} abas | ativa: ${doc.querySelector('nav.bottom-nav a.active small')?.textContent ?? 'nenhuma'}`);
+      log(url.split('?')[0], 'marca', doc.querySelector('.topbar a.brand')?.getAttribute('href') ?? 'sem link');
+      await test();
+      if (errors.length) log(url, 'ERROS', errors.join(' / '));
+    } catch (e) {
+      log(url, 'FALHA', e.message);
+    }
+  }
+  document.getElementById('OUT').textContent = results.join('\n');
+  // Quando aberto pelo run-smoke.mjs, entrega o resultado ao servidor de teste.
+  fetch('/__smoke_result', { method: 'POST', body: results.join('\n') }).catch(() => {});
+})();
+</script>
+</body>
+</html>

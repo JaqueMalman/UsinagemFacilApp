@@ -12,11 +12,11 @@
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <title>Usinagem Fácil — Calculadoras</title>
-<link href="styles.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header class="topbar">
-<div class="brand"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></div>
+<a aria-label="Ir para a tela inicial" class="brand" href="index.html"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Informação de usinagem na palma da mão</small></div></a>
 <a aria-label="Voltar ao início" class="icon-button back-link" href="index.html">‹</a>
 </header>
 <main class="calculator-hub-main">
@@ -30,8 +30,14 @@
 <div><span>3</span><b>Veja</b><small>o resultado</small></div>
 </div>
 </section>
+<section class="section calc-history" hidden="" id="calcHistory">
+<div class="section-heading"><h2>🧮 Últimos cálculos</h2><button class="saved-clear" id="calcHistoryClear" type="button">🗑 Limpar tudo</button></div>
+<p class="saved-hint">Os 5 últimos cálculos de fresamento e avanço feitos neste aparelho. Toque em um para abrir e refazer ou na 🗑 para tirar.</p>
+<div class="calc-history-list" id="calcHistoryList"></div>
+</section>
 <section class="section" hidden="" id="recentCalcs">
-<div class="section-heading"><h2>🕘 Consultados recentemente</h2><span>Neste aparelho</span></div>
+<div class="section-heading"><h2>🕘 Consultados recentemente</h2><button class="saved-clear" id="recentCalcsClear" type="button">🗑 Limpar tudo</button></div>
+<p class="saved-hint">Calculadoras abertas por último neste aparelho. Toque na 🗑 para tirar uma.</p>
 <div class="calculator-shortcuts recent-calcs" id="recentCalcList"></div>
 </section>
 <section class="section">
@@ -60,10 +66,7 @@
 <p>Velocidade de corte e avanço devem ser informados conforme ferramenta, material, catálogo ou processo utilizado.</p>
 </section>
 </main>
-<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a aria-current="page" class="active" href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script defer="" src="user-history.js"></script>
-<script defer="" src="calculator-history.js"></script>
-<script defer="" src="haptics.js"></script>
-<script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script type="module" src="js/pages/calculadoras.js"></script><script type="module" src="js/common.js"></script>
 </body>
 </html>

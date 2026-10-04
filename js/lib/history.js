@@ -1,0 +1,77 @@
+// Favoritos e histórico recente, salvos só no aparelho (localStorage).
+const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1', milling: 'uf_milling_history_v1', feed: 'uf_feed_history_v1' };
+// O armazenamento pode ter sido alterado ou vir de uma versão antiga: só aceita uma
+// lista e descarta os registros que não têm o formato esperado (VALID).
+const isText = v => typeof v === 'string' && v.length > 0;
+const isThread = x => isText(x?.tipo) && isText(x?.passo);
+const isCalc = x => isText(x?.mode) && x.inputs && typeof x.inputs === 'object' && !Array.isArray(x.inputs)
+  && Object.values(x.inputs).every(v => typeof v === 'string') && typeof x.result === 'string' && Number.isFinite(x.at);
+const isRecentCalc = x => isText(x?.href) && isText(x?.label);
+const VALID = { [K.fav]: isThread, [K.recentT]: isThread, [K.recentC]: isRecentCalc, [K.milling]: isCalc, [K.feed]: isCalc };
+
+const read = k => {
+  let v;
+  try { v = JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; }
+  return Array.isArray(v) ? v.filter(VALID[k]) : [];
+};
+const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const key = t => `${t.tipo}|${t.passo}`;
+
+export const favorites = () => read(K.fav);
+export const recentThreads = () => read(K.recentT);
+export const recentCalcs = () => read(K.recentC);
+
+// Retorna true se a rosca passou a ser favorita.
+export function toggleFavorite(t) {
+  const a = read(K.fav), k = key(t);
+  const i = a.findIndex(x => key(x) === k);
+  if (i >= 0) a.splice(i, 1); else a.unshift({ tipo: t.tipo, passo: t.passo, broca: t.broca || null });
+  write(K.fav, a.slice(0, 20));
+  return i < 0;
+}
+
+export function isFavorite(t) { return read(K.fav).some(x => key(x) === key(t)); }
+
+export function removeRecentThread(t) {
+  write(K.recentT, read(K.recentT).filter(x => key(x) !== key(t)));
+}
+
+// Apaga favoritos e roscas recentes de uma vez.
+export function clearThreads() {
+  write(K.fav, []); write(K.recentT, []);
+}
+
+export function addRecentThread(t) {
+  const a = read(K.recentT).filter(x => key(x) !== key(t));
+  a.unshift({ tipo: t.tipo, passo: t.passo, broca: t.broca || null, at: Date.now() });
+  write(K.recentT, a.slice(0, 8));
+}
+
+export function removeRecentCalc(href) { write(K.recentC, read(K.recentC).filter(x => x.href !== href)); }
+export function clearRecentCalcs() { write(K.recentC, []); }
+
+export function addRecentCalc(c) {
+  const a = read(K.recentC).filter(x => x.href !== c.href);
+  a.unshift({ ...c, at: Date.now() });
+  write(K.recentC, a.slice(0, 6));
+}
+
+// Últimos cálculos de uma calculadora: { mode, inputs: { campo: texto digitado }, result, at }.
+// Guarda os 5 mais novos; o mesmo cálculo repetido sobe para o topo em vez de duplicar.
+const sameCalc = (a, b) => a.mode === b.mode && JSON.stringify(a.inputs) === JSON.stringify(b.inputs);
+
+function calcHistory(k) {
+  return {
+    list: () => read(k),
+    add(c) {
+      const a = read(k).filter(x => !sameCalc(x, c));
+      a.unshift({ mode: c.mode, inputs: c.inputs, result: c.result, at: Date.now() });
+      write(k, a.slice(0, 5));
+    },
+    remove(at) { write(k, read(k).filter(x => x.at !== at)); },
+    clear() { write(k, []); }
+  };
+}
+
+export const millingHistory = calcHistory(K.milling);
+export const feedHistory = calcHistory(K.feed);

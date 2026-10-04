@@ -12,12 +12,11 @@
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <title>Usinagem Fácil — Tabelas</title>
-<link href="styles.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header class="topbar">
-<a aria-label="Voltar" class="back-link" href="index.html">‹</a>
-<div class="brand"><div class="brand-icon">▤</div><div><strong>TABELAS <span>TÉCNICAS</span></strong><small>Consulta rápida para a máquina</small></div></div>
+<a aria-label="Ir para a tela inicial" class="brand" href="index.html"><div class="brand-icon">⚙</div><div><strong>USINAGEM <span>FÁCIL</span></strong><small>Tabelas técnicas</small></div></a>
 <a aria-label="Início" class="icon-button table-home" href="index.html">⌂</a>
 </header>
 <div class="info-strip" style="margin:12px auto;max-width:980px"><span>✓</span><div><b>Base técnica v1.2</b><p>Roscas métricas centralizadas e rastreáveis. <a href="auditoria-tecnica.html">Ver auditoria e fontes</a>.</p></div></div><main class="tables-main">
@@ -25,19 +24,19 @@
 <div class="eyebrow">PÁGINA 10 • TABELAS</div>
 <h1>O que você quer consultar?</h1>
 <p>Escolha uma tabela ou pesquise diretamente uma medida.</p>
-<div class="search-box table-search"><span>⌕</span><input id="tableSearch" placeholder="Ex.: M10 • 1/2 • 8,5 mm" type="search"/><button aria-label="Limpar" id="clearTableSearch" type="button">×</button></div>
+<div class="search-box table-search"><span>⌕</span><input aria-label="Pesquisar nas tabelas" id="tableSearch" placeholder="Ex.: M10 • 1/2 • 8,5 mm" type="search"/><button aria-label="Limpar" id="clearTableSearch" type="button">×</button></div>
 </section>
 <section class="section">
 <div class="section-heading"><h2>Escolha a tabela</h2><span>Toque para abrir</span></div>
 <div class="table-type-grid" id="tableTypes">
-<button class="table-type active" data-type="metric-coarse" type="button"><span>M</span><div><b>Métrica grossa</b><small>Rosca ISO Métrica 60°</small></div></button>
-<button class="table-type" data-type="metric-fine" type="button"><span>M</span><div><b>Métrica fina</b><small>Passos finos</small></div></button>
-<button class="table-type" data-type="unc" type="button"><span>UNC</span><div><b>UNC</b><small>Unificada grossa 60°</small></div></button>
-<button class="table-type" data-type="conversion" type="button"><span>↔</span><div><b>Polegada ↔ mm</b><small>Conversão de medidas</small></div></button>
-<button class="table-type" data-type="unf" type="button"><span>UNF</span><div><b>UNF</b><small>Brocas pendentes</small></div></button>
-<button class="table-type" data-type="bsw" type="button"><span>BSW</span><div><b>BSW</b><small>Validação manual final</small></div></button>
-<button class="table-type" data-type="bsp" type="button"><span>BSP</span><div><b>BSP</b><small>Estrutura pronta • brocas pendentes</small></div></button>
-<button class="table-type" data-type="npt" type="button"><span>NPT</span><div><b>NPT</b><small>Validação manual final</small></div></button>
+<button class="table-type active" data-type="metric-coarse" type="button" aria-pressed="true"><span>M</span><div><b>Métrica grossa</b><small>Rosca ISO Métrica 60°</small></div></button>
+<button class="table-type" data-type="metric-fine" type="button" aria-pressed="false"><span>M</span><div><b>Métrica fina</b><small>Passos finos</small></div></button>
+<button class="table-type" data-type="unc" type="button" aria-pressed="false"><span>UNC</span><div><b>UNC</b><small>Unificada grossa 60°</small></div></button>
+<button class="table-type" data-type="conversion" type="button" aria-pressed="false"><span>↔</span><div><b>Polegada ↔ mm</b><small>Conversão de medidas</small></div></button>
+<button class="table-type" data-type="unf" type="button" aria-pressed="false"><span>UNF</span><div><b>UNF</b><small>Brocas pendentes</small></div></button>
+<button class="table-type" data-type="bsw" type="button" aria-pressed="false"><span>BSW</span><div><b>BSW</b><small>Validação manual final</small></div></button>
+<button class="table-type" data-type="bsp" type="button" aria-pressed="false"><span>BSP</span><div><b>BSP</b><small>Estrutura pronta • brocas pendentes</small></div></button>
+<button class="table-type" data-type="npt" type="button" aria-pressed="false"><span>NPT</span><div><b>NPT</b><small>Validação manual final</small></div></button>
 </div>
 </section>
 <section class="section table-results-section">
@@ -50,10 +49,8 @@
 <div class="help-icon">!</div><div><b>Importante</b><p>Esta tela usa somente os dados já transcritos e validados no MVP. UNF, BSW, BSP e NPT serão liberadas depois da conferência completa da tabela original.</p></div>
 </section>
 </main>
-<nav aria-label="Navegação principal" class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a aria-current="page" class="active" href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script defer="" src="technical-data.js"></script><script defer="" src="data.js"></script>
-<script defer="" src="performance-utils.js"></script><script defer="" src="tabelas.js"></script>
-<script defer="" src="haptics.js"></script>
-<script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script defer="" src="data/technical-data.js"></script><script defer="" src="data/data.js"></script>
+<script type="module" src="js/pages/tabelas.js"></script><script type="module" src="js/common.js"></script>
 </body>
 </html>

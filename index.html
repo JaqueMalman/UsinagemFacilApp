@@ -12,7 +12,7 @@
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <title>Usinagem Fácil — Início</title>
-<link href="styles.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header class="topbar">
@@ -28,7 +28,7 @@
 <p>Escolha uma opção ou pesquise uma medida, rosca ou cálculo.</p>
 <div class="search-box">
 <span aria-hidden="true">⌕</span>
-<input autocomplete="off" id="search" placeholder="Ex.: M10 x 1,5 • 1/2” • RPM" type="search"/>
+<input aria-label="Pesquisar no app" autocomplete="off" id="search" placeholder="Ex.: M10 x 1,5 • 1/2” • RPM" type="search"/>
 <button aria-label="Limpar pesquisa" id="clearSearch" type="button">×</button>
 </div>
 <div aria-live="polite" class="search-feedback" id="searchFeedback"></div>
@@ -62,23 +62,12 @@
 </button>
 </div>
 </section>
-<section aria-labelledby="rapidas-title" class="section quick">
-<div class="section-heading"><h2 id="rapidas-title">★ Consultas rápidas</h2><span>Mais usadas</span></div>
-<div class="quick-scroll">
-<button class="quick-card" data-href="detalhe-rosca.html?passo=8x1%2C25&amp;tipo=M%20Rosca%20ISO%20M%C3%A9trica%20Grossa%2060%C2%B0" type="button"><span>🔩</span><b>M8 × 1,25</b><small>Broca 6,8 mm</small></button>
-<button class="quick-card" data-href="conversoes.html" type="button"><span>📏</span><b>1/2″</b><small>12,70 mm</small></button>
-<button class="quick-card" data-href="fresamento.html?calc=rpm" type="button"><span>⚙</span><b>Calcular RPM</b><small>Fresa / broca</small></button>
-<button class="quick-card" data-href="torneamento.html?calc=rpm" type="button"><span>↻</span><b>Torneamento</b><small>RPM da peça</small></button>
-</div>
-</section>
 <section class="help-card">
 <div class="help-icon">?</div>
 <div><b>Não sabe qual opção escolher?</b><p>Use a pesquisa acima. Você pode digitar algo como “M10”, “broca”, “RPM” ou “1/2”.</p></div>
 </section>
 </main>
-<nav aria-label="Navegação principal" class="bottom-nav"><a aria-current="page" class="active" href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script defer="" src="performance-utils.js"></script><script defer="" src="app.js"></script>
-<script defer="" src="haptics.js"></script>
-<script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script type="module" src="js/pages/index.js"></script><script type="module" src="js/common.js"></script>
 </body>
 </html>
