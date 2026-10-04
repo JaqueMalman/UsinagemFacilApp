@@ -1,4 +1,4 @@
-import { parseInch, parseMillimeters, nearestFraction, formatNumber } from './js/lib/numbers.js';
+import { parseInch, parseMillimeters, nearestFraction, formatNumber } from '../lib/numbers.js';
 
 const $ = s => document.querySelector(s);
 const modes = [...document.querySelectorAll('.conversion-mode')];

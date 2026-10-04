@@ -1,5 +1,5 @@
-import { normalizeThread } from './js/lib/text.js';
-import { threadLabel } from './js/lib/threads.js';
+import { normalizeThread } from '../lib/text.js';
+import { threadLabel } from '../lib/threads.js';
 
 const $ = s => document.querySelector(s);
 const rows = window.DB?.roscas || [];

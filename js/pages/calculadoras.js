@@ -1,4 +1,4 @@
-import { addRecentCalc, recentCalcs } from './js/lib/history.js';
+import { addRecentCalc, recentCalcs } from '../lib/history.js';
 
 const labels = {
   'fresamento.html':'Fresamento / Furação','torneamento.html':'Torneamento',

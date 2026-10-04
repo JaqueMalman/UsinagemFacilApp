@@ -5,7 +5,7 @@
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="Usinagem Fácil" name="apple-mobile-web-app-title"/>
 <link href="manifest.webmanifest" rel="manifest"/>
-<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/><title>Aprender — Usinagem Fácil</title><link href="styles.css" rel="stylesheet"/></head><body>
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon"/><title>Aprender — Usinagem Fácil</title><link href="css/styles.css" rel="stylesheet"/></head><body>
 <header class="topbar"><div class="brand"><a aria-label="Voltar" class="back-link" href="index.html">‹</a><div><strong>USINAGEM <span>FÁCIL</span></strong><small>APRENDER</small></div></div><a aria-label="Início" class="icon-button table-home" href="index.html">⌂</a></header>
 <main class="learn-main">
 <section class="learn-hero"><div class="eyebrow">💡 APRENDER</div><h1>Entenda sem complicação</h1><p>Escolha um assunto. Primeiro mostramos com desenho e exemplo. A parte técnica fica por último.</p><div class="search-box learn-search"><span>⌕</span><input id="learnSearch" placeholder="Ex.: RPM, avanço, rosca, diâmetro" type="search"/><button aria-label="Limpar" id="learnClear" type="button">×</button></div></section>
@@ -22,6 +22,6 @@
 <section class="help-card"><div class="help-icon">!</div><div><b>Aprender não é escolher parâmetro de corte</b><p>Os exemplos ajudam a entender os conceitos. Valores de corte e avanço devem vir do processo, ferramenta ou catálogo utilizado.</p></div></section>
 </main>
 <div aria-hidden="true" class="learn-sheet" id="learnSheet"><button aria-label="Fechar" class="sheet-backdrop" id="learnBackdrop" type="button"></button><article class="learn-sheet-card"><div class="sheet-handle"></div><button aria-label="Fechar" class="sheet-close" id="learnClose" type="button">×</button><div id="learnContent"></div></article></div>
-<nav class="bottom-nav"><a href="index.html"><span>⌂</span><small>Início</small></a><a href="roscas.html"><span>🔩</span><small>Roscas</small></a><a href="calculadoras.html"><span>🧮</span><small>Calcular</small></a><a aria-current="page" class="active" href="tabelas.html"><span>☰</span><small>Mais</small></a></nav>
-<script type="module" src="aprender.js"></script> <script type="module" src="js/lib/haptics.js"></script><script defer="" src="sw-register.js"></script>
+<nav class="bottom-nav" aria-label="Navegação principal"></nav>
+<script type="module" src="js/pages/aprender.js"></script> <script type="module" src="js/common.js"></script>
 </body></html>

@@ -1,6 +1,6 @@
-import { parseNumberBR, formatNumber } from './js/lib/numbers.js';
-import { feedFromTooth } from './js/lib/formulas.js';
-import { rpmMessage, renderAlert } from './js/lib/safety.js';
+import { parseNumberBR, formatNumber } from '../lib/numbers.js';
+import { feedFromTooth } from '../lib/formulas.js';
+import { rpmMessage, renderAlert } from '../lib/safety.js';
 
 let z = 4;
 const picker = document.querySelector('#teethPicker');

@@ -1,5 +1,5 @@
-import { normalizeThread, debounce } from './js/lib/text.js';
-import { threadLabel, threadDetailUrl } from './js/lib/threads.js';
+import { normalizeThread, debounce } from '../lib/text.js';
+import { threadLabel, threadDetailUrl } from '../lib/threads.js';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];

@@ -1,6 +1,6 @@
-import { normalizeThread, debounce } from './js/lib/text.js';
-import { threadLabel, threadDetailUrl } from './js/lib/threads.js';
-import * as history from './js/lib/history.js';
+import { normalizeThread, debounce } from '../lib/text.js';
+import { threadLabel, threadDetailUrl } from '../lib/threads.js';
+import * as history from '../lib/history.js';
 
 const allThreads = window.DB?.roscas || [];
 const typeButtons = [...document.querySelectorAll('.thread-type:not(.disabled)')];

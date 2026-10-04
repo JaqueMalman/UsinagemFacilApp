@@ -1,5 +1,5 @@
-import { normalizeSearch, debounce } from './js/lib/text.js';
-import { threadLabel, threadDetailUrl } from './js/lib/threads.js';
+import { normalizeSearch, debounce } from '../lib/text.js';
+import { threadLabel, threadDetailUrl } from '../lib/threads.js';
 
 const search = document.querySelector('#search');
 const clear = document.querySelector('#clearSearch');

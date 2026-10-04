@@ -1,4 +1,4 @@
-import { normalizeSearch, debounce } from './js/lib/text.js';
+import { normalizeSearch, debounce } from '../lib/text.js';
 
 const topics={
 rpm:{icon:'⚙️',title:'O que é RPM?',simple:'RPM é quantas voltas acontecem em 1 minuto.',visual:'↻  ↻  ↻',example:'1.000 RPM = 1.000 voltas por minuto.',tip:'No fresamento, normalmente observamos o diâmetro da ferramenta. No torneamento, o diâmetro da peça.',technical:'Na tabela técnica: n = Vc × 1000 ÷ (π × D). No fresamento, D é o diâmetro da ferramenta (Dc); no torneamento, é o diâmetro da peça.'},

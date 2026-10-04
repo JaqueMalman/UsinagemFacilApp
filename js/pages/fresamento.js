@@ -1,5 +1,5 @@
-import { createCalculator } from './js/lib/calculator.js';
-import { rpm, cuttingSpeed, feedPerMinute, feedPerTooth } from './js/lib/formulas.js';
+import { createCalculator } from '../lib/calculator.js';
+import { rpm, cuttingSpeed, feedPerMinute, feedPerTooth } from '../lib/formulas.js';
 
 createCalculator({
   defs: {

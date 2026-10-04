@@ -14,7 +14,7 @@ export function installLocalStorage() {
 // Carrega technical-data.js e data.js (scripts clássicos que definem window.TECHNICAL_DATA e window.DB).
 export async function loadData() {
   globalThis.window = globalThis;
-  await import('../technical-data.js');
-  await import('../data.js');
+  await import('../data/technical-data.js');
+  await import('../data/data.js');
   return { TECHNICAL_DATA: globalThis.TECHNICAL_DATA, DB: globalThis.DB };
 }

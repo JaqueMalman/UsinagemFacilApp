@@ -168,6 +168,8 @@ const pages = {
       await load(url);
       const errors = [];
       frame.contentWindow.addEventListener('error', e => errors.push(e.message));
+      const nav = doc.querySelectorAll('nav.bottom-nav a');
+      log(url.split('?')[0], 'nav', `${nav.length} abas | ativa: ${doc.querySelector('nav.bottom-nav a.active small')?.textContent ?? 'nenhuma'}`);
       await test();
       if (errors.length) log(url, 'ERROS', errors.join(' / '));
     } catch (e) {
