@@ -32,5 +32,11 @@ createCalculator({
   formulaBox: document.querySelector('#formulaBox'),
   formulaToggle: document.querySelector('#toggleFormula'),
   optionButtons: [...document.querySelectorAll('.milling-option')],
-  ids: { input: id => id, button: 'doCalc', result: 'result', error: 'calcError', alert: 'safetyAlert' }
+  ids: { input: id => id, button: 'doCalc', result: 'result', error: 'calcError', alert: 'safetyAlert' },
+  formulaLabels: { show: 'ⓘ Ver como é calculado' }
 });
+
+document.querySelector('#diameterHelp').onclick = () => {
+  const box = document.querySelector('#diameterHelpBox');
+  box.hidden = !box.hidden;
+};

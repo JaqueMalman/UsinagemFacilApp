@@ -2,6 +2,17 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.22 — Conversões
+- Botão da fórmula passa a dizer "Ver como é calculado" e muda para "Ocultar fórmula" quando aberto.
+- A figura das réguas saiu do topo e fica dentro da explicação da fórmula.
+- Cache PWA v1.22.
+
+## v1.21 — Fresamento
+- Botão da fórmula passa a dizer "Ver como é calculado".
+- Novo "Onde medir o diâmetro da ferramenta?" junto do botão da fórmula.
+- A figura da fresa saiu do topo e fica dentro dessa explicação, com o "Ø Dc" indicado.
+- Cache PWA v1.21.
+
 ## v1.20 — Torneamento
 - Botão da fórmula passa a dizer "Ver como é calculado".
 - "Onde medir o diâmetro da peça?" movido para junto do botão da fórmula.

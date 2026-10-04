@@ -24,12 +24,6 @@
 <div class="eyebrow">⚙️ FRESAMENTO</div>
 <h1>O que você quer descobrir?</h1>
 <p>Escolha uma conta. Mostraremos somente os dados necessários.</p>
-<div aria-label="Ilustração de uma fresa usinando uma peça" class="milling-visual">
-<div class="cutter"><span></span><span></span><span></span><span></span></div>
-<div class="cut-arrow">↻</div>
-<div class="workpiece"></div>
-<div class="feed-arrow">AVANÇO →</div>
-</div>
 </section>
 <section class="section">
 <div class="section-heading"><h2>Escolha o cálculo</h2><span>1 toque</span></div>
@@ -43,8 +37,20 @@
 <section aria-live="polite" class="calc-simple" id="calcPanel"></section>
 <section class="feed-detail-link"><a href="avanco-fresamento.html">➡️ Abrir calculadora guiada de avanço <span>›</span></a></section>
 <section class="learn-formula">
-<button id="toggleFormula" type="button">ⓘ Ver como foi calculado</button>
+<button id="toggleFormula" type="button">ⓘ Ver como é calculado</button>
 <div class="formula-box" hidden="" id="formulaBox"></div>
+<button class="diameter-help-btn" id="diameterHelp" type="button">💡 Onde medir o diâmetro da ferramenta?</button>
+<div class="diameter-help" hidden="" id="diameterHelpBox">
+<b>Meça de um lado ao outro da fresa.</b>
+<p>Use o diâmetro de corte da ferramenta, medido nas pontas das facas. Na figura abaixo ele está indicado por <strong>Ø Dc</strong>.</p>
+<div aria-label="Ilustração de uma fresa usinando uma peça" class="milling-visual">
+<div class="cutter"><span></span><span></span><span></span><span></span></div>
+<div class="cutter-dia">Ø Dc</div>
+<div class="cut-arrow">↻</div>
+<div class="workpiece"></div>
+<div class="feed-arrow">AVANÇO →</div>
+</div>
+</div>
 </section>
 <div class="info-strip"><span>💡</span><div><b>Importante</b><p>Velocidade de corte e avanço devem vir da recomendação da ferramenta, catálogo ou processo. Esta tela faz a conta usando os valores informados por você.</p></div></div>
 </main>

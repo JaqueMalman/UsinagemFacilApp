@@ -58,8 +58,13 @@ const pages = {
     await run('rpm', {vc:'300', dc:'10'});
     $('#vc').value = 'abc'; await click('#doCalc');
     log('fresamento', 'inválido após resultado', `${text('#result strong')} | erro: ${text('#calcError')} | alerta oculto: ${$('#safetyAlert').hidden}`);
+    log('fresamento', 'botão fórmula', text('#toggleFormula'));
     await click('#toggleFormula');
     log('fresamento', 'fórmula', `${!$('#formulaBox').hidden} ${text('#formulaBox p')}`);
+    log('fresamento', 'ajuda logo após a fórmula', $('#formulaBox').nextElementSibling?.id);
+    await click('#diameterHelp');
+    log('fresamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
+    log('fresamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .milling-visual') + ' | figura no topo: ' + !!$('.milling-hero .milling-visual'));
   },
   async 'torneamento.html?calc=vc'(){
     const run = async (mode, vals) => {
@@ -103,6 +108,10 @@ const pages = {
     log('conversoes', 'grade', $$('#fractionGrid button').length + ' botões, 1º: ' + text('#fractionGrid button small'));
     await click('#fractionGrid button:nth-child(4)');
     log('conversoes', 'grade 1/4', text('#conversionResult strong'));
+    log('conversoes', 'botão fórmula', text('#toggleFormula'));
+    await click('#toggleFormula');
+    log('conversoes', 'fórmula aberta', `${text('#toggleFormula')} | ${text('#formulaText')}`);
+    log('conversoes', 'figura dentro da fórmula', !!$('#formulaBox .conversion-visual') + ' | figura no topo: ' + !!$('.conversion-hero .conversion-visual'));
   },
   async 'roscas.html'(){
     log('roscas', 'inicial', `${text('#resultCount')} | 1º: ${text('.thread-result b')} ${text('.thread-result .drill-mini')}`);

@@ -51,4 +51,7 @@ grid.querySelectorAll('button').forEach(b => b.onclick = () => {
 modes.forEach(b => b.onclick = () => { mode = b.dataset.mode; setMode(); });
 $('#convertBtn').onclick = convert;
 input.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
-$('#toggleFormula').onclick = () => $('#formulaBox').classList.toggle('is-hidden');
+$('#toggleFormula').onclick = () => {
+  const hidden = $('#formulaBox').classList.toggle('is-hidden');
+  $('#toggleFormula').textContent = hidden ? 'ⓘ Ver como é calculado' : 'ⓘ Ocultar fórmula';
+};
