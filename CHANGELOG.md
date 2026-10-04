@@ -2,6 +2,11 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.25 — Tabelas
+- O topo mostra "USINAGEM FÁCIL" com o subtítulo "Tabelas técnicas", no lugar de "TABELAS TÉCNICAS / Consulta rápida para a máquina", e volta para a tela inicial ao ser tocado.
+- Conversões: removida a seta "‹" ao lado de "USINAGEM FÁCIL"; o botão CONVERTER ganha o mesmo visual do botão CALCULAR do fresamento.
+- Cache PWA v1.25.
+
 ## v1.24 — Conversões
 - "USINAGEM FÁCIL" no topo fica alinhado à esquerda, ao lado da seta de voltar, em vez de centralizado.
 - A seta de voltar "‹" no topo fica branca, e não mais azul, em conversões e aprender.
