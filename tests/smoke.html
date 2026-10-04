@@ -75,8 +75,13 @@ const pages = {
     log('torneamento', 'vc 50/955', await run('vc', {d:'50', n:'955'}));
     $('#turn-d').value = ''; await click('#doTurningCalc');
     log('torneamento', 'inválido após resultado', `${text('#turningResult strong')} | erro: ${text('#turningError')}`);
+    log('torneamento', 'botão fórmula', text('#toggleTurningFormula'));
+    await click('#toggleTurningFormula');
+    log('torneamento', 'fórmula aberta', `${text('#toggleTurningFormula')} | ${text('#turningFormulaBox p')}`);
+    log('torneamento', 'ajuda logo após a fórmula', $('#turningFormulaBox').nextElementSibling?.id);
     await click('#diameterHelp');
     log('torneamento', 'ajuda diâmetro', !$('#diameterHelpBox').hidden);
+    log('torneamento', 'figura dentro da ajuda', !!$('#diameterHelpBox .turning-visual') + ' | figura no topo: ' + !!$('.turning-hero .turning-visual'));
   },
   async 'avanco-fresamento.html'(){
     $('#rpm').value = '3000'; $('#fz').value = '0,1'; await click('#calculateFeed');

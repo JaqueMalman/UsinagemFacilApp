@@ -2,6 +2,12 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.20 — Torneamento
+- Botão da fórmula passa a dizer "Ver como é calculado".
+- "Onde medir o diâmetro da peça?" movido para junto do botão da fórmula.
+- A figura da peça no torno saiu do topo e fica dentro da explicação do diâmetro; o rótulo "PEÇA GIRANDO" foi para o canto para não cobrir o "Ø D".
+- Cache PWA v1.20.
+
 ## v1.19 — Tela inicial
 - Removida a seção "★ Consultas rápidas", que confundia os usuários. As mesmas funções continuam nos cards principais e na pesquisa.
 - A tela inicial não carrega mais os dados de roscas.

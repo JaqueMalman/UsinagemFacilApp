@@ -24,18 +24,6 @@
 <div class="eyebrow">🔧 TORNEAMENTO</div>
 <h1>O que você quer descobrir?</h1>
 <p>Escolha uma conta. O aplicativo mostra somente os dados necessários.</p>
-<div aria-label="Ilustração de uma peça cilíndrica girando no torno" class="turning-visual">
-<div class="lathe-chuck"><i></i><i></i><i></i></div>
-<div class="lathe-part"><span>Ø D</span></div>
-<div class="lathe-rotation">↻ <b>PEÇA GIRANDO</b></div>
-<div class="lathe-tool"></div>
-<div class="lathe-feed">AVANÇO ←</div>
-</div>
-<button class="diameter-help-btn" id="diameterHelp" type="button">💡 Onde medir o diâmetro da peça?</button>
-<div class="diameter-help" hidden="" id="diameterHelpBox">
-<b>Meça de um lado ao outro da peça.</b>
-<p>Use o diâmetro da região que está sendo usinada. Na figura acima ele está indicado por <strong>Ø D</strong>.</p>
-</div>
 </section>
 <section class="section">
 <div class="section-heading"><h2>Escolha o cálculo</h2><span>1 toque</span></div>
@@ -47,8 +35,20 @@
 </section>
 <section aria-live="polite" class="calc-simple turning-calc" id="turningCalc"></section>
 <section class="learn-formula">
-<button id="toggleTurningFormula" type="button">ⓘ Ver como foi calculado</button>
+<button id="toggleTurningFormula" type="button">ⓘ Ver como é calculado</button>
 <div class="formula-box" hidden="" id="turningFormulaBox"></div>
+<button class="diameter-help-btn" id="diameterHelp" type="button">💡 Onde medir o diâmetro da peça?</button>
+<div class="diameter-help" hidden="" id="diameterHelpBox">
+<b>Meça de um lado ao outro da peça.</b>
+<p>Use o diâmetro da região que está sendo usinada. Na figura abaixo ele está indicado por <strong>Ø D</strong>.</p>
+<div aria-label="Ilustração de uma peça cilíndrica girando no torno" class="turning-visual">
+<div class="lathe-chuck"><i></i><i></i><i></i></div>
+<div class="lathe-part"><span>Ø D</span></div>
+<div class="lathe-rotation">↻ <b>PEÇA GIRANDO</b></div>
+<div class="lathe-tool"></div>
+<div class="lathe-feed">AVANÇO ←</div>
+</div>
+</div>
 </section>
 <div class="info-strip turning-note"><span>💡</span><div><b>Importante</b><p>Esta tela faz a conta usando os valores informados por você. Velocidade de corte e avanço devem vir da recomendação da ferramenta, catálogo ou processo.</p></div></div>
 </main>

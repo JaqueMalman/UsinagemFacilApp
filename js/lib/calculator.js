@@ -3,8 +3,7 @@
 import { parseNumberBR, formatNumber } from './numbers.js';
 import { rpmMessage, renderAlert } from './safety.js';
 
-const FORMULA_SHOW = 'ⓘ Ver como foi calculado';
-const FORMULA_HIDE = 'ⓘ Ocultar fórmula';
+const FORMULA_LABELS = { show: 'ⓘ Ver como foi calculado', hide: 'ⓘ Ocultar fórmula' };
 
 // Calcula um modo a partir dos valores digitados (strings, como vêm dos campos).
 // Retorna { value, rpm } ou { error }. A rotação vem do resultado (modo RPM) ou do campo n.
@@ -28,8 +27,10 @@ export function solve(def, raw) {
  * @param {Element[]} o.optionButtons botões de modo (data-calc)
  * @param {object} o.ids             ids gerados: input(id), button, result, error, alert
  * @param {object} [o.classes]       classes extras de estilo: badge, button, result
+ * @param {object} [o.formulaLabels] textos do botão da fórmula: show, hide
  */
-export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {} }) {
+export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {}, formulaLabels = {} }) {
+  const labels = { ...FORMULA_LABELS, ...formulaLabels };
   const requested = new URLSearchParams(location.search).get('calc');
   let mode = requested && defs[requested] ? requested : Object.keys(defs)[0];
   const byId = id => document.getElementById(id);
@@ -62,7 +63,7 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
       <div class="calc-error" id="${ids.error}"></div><div class="safety-slot" id="${ids.alert}" hidden></div>`;
     formulaBox.innerHTML = `<b>Fórmula da tabela técnica</b><p>${d.formula}</p><small>π = 3,1416</small>`;
     formulaBox.hidden = true;
-    formulaToggle.textContent = FORMULA_SHOW;
+    formulaToggle.textContent = labels.show;
     byId(ids.button).onclick = calculate;
   }
 
@@ -76,7 +77,7 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
   });
   formulaToggle.onclick = () => {
     formulaBox.hidden = !formulaBox.hidden;
-    formulaToggle.textContent = formulaBox.hidden ? FORMULA_SHOW : FORMULA_HIDE;
+    formulaToggle.textContent = formulaBox.hidden ? labels.show : labels.hide;
   };
   render();
 }

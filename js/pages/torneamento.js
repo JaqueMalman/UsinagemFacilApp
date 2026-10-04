@@ -33,7 +33,8 @@ createCalculator({
   formulaToggle: document.querySelector('#toggleTurningFormula'),
   optionButtons: [...document.querySelectorAll('.turning-option')],
   ids: { input: id => 'turn-' + id, button: 'doTurningCalc', result: 'turningResult', error: 'turningError', alert: 'turningSafetyAlert' },
-  classes: { badge: 'turning-badge', button: 'turning-calc-btn', result: 'turning-result' }
+  classes: { badge: 'turning-badge', button: 'turning-calc-btn', result: 'turning-result' },
+  formulaLabels: { show: 'ⓘ Ver como é calculado' }
 });
 
 document.querySelector('#diameterHelp').onclick = () => {
