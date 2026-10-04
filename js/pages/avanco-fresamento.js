@@ -1,6 +1,9 @@
 import { parseNumberBR, formatNumber } from '../lib/numbers.js';
 import { feedFromTooth } from '../lib/formulas.js';
 import { rpmMessage, renderAlert } from '../lib/safety.js';
+import { feedHistory } from '../lib/history.js';
+import { setupCalcHistory } from '../lib/calc-history.js';
+import { describeFeedCalc } from '../lib/milling-calcs.js';
 
 let z = 4;
 const picker = document.querySelector('#teethPicker');
@@ -12,15 +15,17 @@ const alertSlot = document.querySelector('#feedSafetyAlert');
 const formula = document.querySelector('#feedFormula');
 const toggle = document.querySelector('#toggleFeedFormula');
 
-picker.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
-  picker.querySelectorAll('button').forEach(x => x.classList.remove('active'));
-  btn.classList.add('active'); z = Number(btn.dataset.z);
-}));
+function setTeeth(n) {
+  z = n;
+  picker.querySelectorAll('button').forEach(x => x.classList.toggle('active', Number(x.dataset.z) === z));
+}
+picker.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => setTeeth(Number(btn.dataset.z))));
 document.querySelector('#dontKnow').onclick = () => { help.hidden = !help.hidden; };
 
-document.querySelector('#calculateFeed').onclick = () => {
-  const n = parseNumberBR(document.querySelector('#rpm').value, 0);
-  const fz = parseNumberBR(document.querySelector('#fz').value, 0);
+function calculate() {
+  const rpmText = document.querySelector('#rpm').value, fzText = document.querySelector('#fz').value;
+  const n = parseNumberBR(rpmText, 0);
+  const fz = parseNumberBR(fzText, 0);
   if (!(n > 0) || !(fz > 0)) {
     error.textContent = 'Preencha RPM e avanço por faca com valores maiores que zero.';
     result.classList.add('empty'); result.querySelector('strong').textContent = '—';
@@ -30,8 +35,29 @@ document.querySelector('#calculateFeed').onclick = () => {
   }
   error.textContent = ''; result.classList.remove('empty');
   renderAlert(alertSlot, rpmMessage(n));
-  result.querySelector('strong').textContent = formatNumber(feedFromTooth(n, z, fz), 0);
+  const vf = formatNumber(feedFromTooth(n, z, fz), 0);
+  result.querySelector('strong').textContent = vf;
   summary.textContent = `Cálculo: ${formatNumber(n)} RPM × ${z} facas × ${formatNumber(fz)} mm/faca.`;
   result.scrollIntoView({ behavior: 'smooth', block: 'center' });
-};
+  feedHistory.add({ mode: 'vf', inputs: { z: String(z), rpm: rpmText, fz: fzText }, result: vf });
+  refreshHistory();
+}
+document.querySelector('#calculateFeed').onclick = calculate;
+
+// Últimos cálculos: tocar no card preenche facas, RPM e fz e refaz a conta.
+const refreshHistory = setupCalcHistory({
+  store: feedHistory,
+  describe: describeFeedCalc,
+  onOpen: openSaved
+});
+
+// Abre um cálculo salvo: pelo card desta página ou vindo da tela Calculadoras (?refazer=<at>).
+function openSaved(c) {
+  setTeeth(Number(c.inputs.z));
+  document.querySelector('#rpm').value = c.inputs.rpm;
+  document.querySelector('#fz').value = c.inputs.fz;
+  calculate();
+}
+const redo = feedHistory.list().find(c => String(c.at) === new URLSearchParams(location.search).get('refazer'));
+if (redo) openSaved(redo);
 toggle.onclick = () => { formula.hidden = !formula.hidden; toggle.textContent = formula.hidden ? 'ⓘ Ver como é calculado' : 'ⓘ Ocultar fórmula'; };

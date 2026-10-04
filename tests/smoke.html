@@ -70,7 +70,7 @@ const pages = {
     log('fresamento', 'refazer do histórico', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')} | 1º: ${text('.calc-history-open b')}`);
     await click('.calc-history-item .saved-delete');
     log('fresamento', 'lixeira', `${$$('.calc-history-item').length} cálculos`);
-    await click('#clearHistory'); await click('#clearHistory');
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
     log('fresamento', 'limpar tudo', `${$$('.calc-history-item').length} cálculos | visível: ${!$('#calcHistory').hidden}`);
   },
   async 'torneamento.html?calc=vc'(){
@@ -104,6 +104,13 @@ const pages = {
     log('avanco', 'alerta rpm', text('#feedSafetyAlert strong'));
     $('#fz').value = ''; await click('#calculateFeed');
     log('avanco', 'inválido', `${text('#feedResult strong')} | ${text('#feedError')} | ${text('#feedSummary')}`);
+    log('avanco', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | 1º: ${text('.calc-history-open span')}`);
+    await click('.calc-history-item:nth-child(2) .calc-history-open');
+    log('avanco', 'refazer do histórico', `${$('#teethPicker .active')?.dataset.z} facas | ${$('#rpm').value} RPM | ${text('#feedResult strong')}`);
+    await click('.calc-history-item .saved-delete');
+    log('avanco', 'lixeira', `${$$('.calc-history-item').length} cálculos`);
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
+    log('avanco', 'limpar tudo', `${$$('.calc-history-item').length} cálculos | visível: ${!$('#calcHistory').hidden}`);
     log('avanco', 'botão fórmula', text('#toggleFeedFormula'));
     await click('#dontKnow');
     log('avanco', 'ajuda facas', !$('#teethHelp').hidden);
@@ -180,7 +187,21 @@ const pages = {
     frame.contentWindow.localStorage.setItem('uf_recent_calcs_v1', JSON.stringify([{href:'conversoes.html', label:'Conversões'}]));
     await load('calculadoras.html');
     log('calculadoras', 'com histórico', `${!$('#recentCalcs').hidden} | ${text('#recentCalcList b')}`);
-    frame.contentWindow.localStorage.removeItem('uf_recent_calcs_v1');
+    await click('#recentCalcList .saved-delete');
+    log('calculadoras', 'lixeira recente', `seção oculta: ${$('#recentCalcs').hidden}`);
+    const ls = () => frame.contentWindow.localStorage;
+    ls().setItem('uf_milling_history_v1', JSON.stringify([{mode:'rpm', inputs:{vc:'100', dc:'10'}, result:'3.183', at:2}, {mode:'vf', inputs:{n:'3000', f:'0,1'}, result:'300', at:1}]));
+    ls().setItem('uf_feed_history_v1', JSON.stringify([{mode:'vf', inputs:{z:'4', rpm:'3000', fz:'0,1'}, result:'1.200', at:3}]));
+    await load('calculadoras.html');
+    log('calculadoras', 'últimos cálculos', $$('.calc-history-open small').map(s => s.textContent).join(' | '));
+    await click('.calc-history-item .saved-delete');
+    log('calculadoras', 'lixeira cálculo', `${$$('.calc-history-item').length} | avanço salvo: ${JSON.parse(ls().getItem('uf_feed_history_v1')).length}`);
+    await load('fresamento.html?refazer=1');
+    log('calculadoras', 'refazer no fresamento', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')}`);
+    await load('calculadoras.html');
+    await click('#calcHistoryClear'); await click('#calcHistoryClear');
+    log('calculadoras', 'limpar cálculos', `${$$('.calc-history-item').length} | seção oculta: ${$('#calcHistory').hidden}`);
+    ls().removeItem('uf_recent_calcs_v1');
   },
   async 'auditoria-tecnica.html'(){
     log('auditoria', 'famílias', `${$$('.family').length} | ${text('.family b')} | ${text('.family p')}`);

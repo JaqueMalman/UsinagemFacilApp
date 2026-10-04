@@ -1,4 +1,7 @@
-import { addRecentCalc, recentCalcs } from '../lib/history.js';
+import { addRecentCalc, recentCalcs, removeRecentCalc, clearRecentCalcs, millingHistory, feedHistory } from '../lib/history.js';
+import { setupCalcHistory } from '../lib/calc-history.js';
+import { twoTapButton } from '../lib/confirm.js';
+import { describeMillingCalc, describeFeedCalc } from '../lib/milling-calcs.js';
 
 const labels = {
   'fresamento.html':'Fresamento / Furação','torneamento.html':'Torneamento',
@@ -10,14 +13,40 @@ document.querySelectorAll('.hub-operation-grid a,.calculator-shortcuts a').forEa
   const href = a.getAttribute('href');
   addRecentCalc({href, label: labels[href] || a.querySelector('b')?.textContent || 'Cálculo'});
 }));
-const recent = recentCalcs(), sec = document.querySelector('#recentCalcs'), list = document.querySelector('#recentCalcList');
-if(recent.length && sec && list){
-  sec.hidden = false;
-  recent.slice(0, 4).forEach(c => {
+// Consultados recentemente: atalhos das calculadoras abertas por último.
+function renderRecent() {
+  const recent = recentCalcs().slice(0, 4), sec = document.querySelector('#recentCalcs'), list = document.querySelector('#recentCalcList');
+  sec.hidden = !recent.length;
+  list.innerHTML = '';
+  recent.forEach(c => {
+    const wrap = document.createElement('div'); wrap.className = 'recent-calc-wrap';
     const a = document.createElement('a');
     a.href = c.href;
     a.innerHTML = `<span>🕘</span><b>${c.label}</b><small>Abrir novamente</small>`;
     a.addEventListener('click', () => addRecentCalc(c));
-    list.appendChild(a);
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'saved-delete';
+    del.textContent = '🗑'; del.setAttribute('aria-label', `Tirar dos recentes: ${c.label}`);
+    del.onclick = () => { removeRecentCalc(c.href); renderRecent(); };
+    wrap.append(a, del); list.appendChild(wrap);
   });
 }
+twoTapButton(document.querySelector('#recentCalcsClear'), () => { clearRecentCalcs(); renderRecent(); });
+renderRecent();
+
+// Últimos cálculos: fresamento e avanço juntos, os 5 mais novos. Tocar abre a página e refaz a conta.
+const PAGES = { milling: 'fresamento.html', feed: 'avanco-fresamento.html' };
+const STORES = { milling: millingHistory, feed: feedHistory };
+const allCalcs = {
+  list: () => Object.entries(STORES).flatMap(([source, st]) => st.list().map(c => ({ ...c, source })))
+    .sort((a, b) => b.at - a.at).slice(0, 5),
+  remove: at => Object.values(STORES).forEach(st => st.remove(at)),
+  clear: () => Object.values(STORES).forEach(st => st.clear())
+};
+setupCalcHistory({
+  store: allCalcs,
+  describe: c => {
+    const info = c.source === 'feed' ? describeFeedCalc(c) : describeMillingCalc(c);
+    return info && { ...info, title: `${c.source === 'feed' ? 'Avanço de fresamento' : 'Fresamento'} · ${info.title}` };
+  },
+  onOpen: c => { location.href = `${PAGES[c.source]}?refazer=${c.at}`; }
+});

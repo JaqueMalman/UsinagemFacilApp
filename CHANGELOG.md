@@ -2,6 +2,19 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.32 — Calculadoras
+- Nova seção "🧮 Últimos cálculos" com os 5 cálculos mais novos de fresamento e de avanço juntos. Tocar em um abre a página certa e refaz a conta; lixeira em cada card e "Limpar tudo".
+- "🕘 Consultados recentemente" ganha lixeira em cada atalho e "Limpar tudo".
+- Os modos do fresamento e o texto dos cards de histórico vão para `js/lib/milling-calcs.js`.
+- Cache PWA v1.32.
+
+## v1.31 — Avanço de fresamento
+- Mesma seção "🕘 Últimos cálculos" do fresamento, com os 5 últimos cálculos, lixeira em cada card e "Limpar tudo". Tocar no card preenche facas, RPM e avanço por faca e refaz a conta.
+- O histórico do avanço é separado do histórico do fresamento.
+- A seção de histórico passa a ser desenhada por `js/lib/calc-history.js`, usado pelas duas páginas.
+- O botão "Ver como é calculado" deixa de encostar nas bordas da tela.
+- Cache PWA v1.31.
+
 ## v1.30 — Fresamento
 - Nova seção "🕘 Últimos cálculos" com os 5 últimos cálculos feitos no aparelho. Tocar em um card refaz a conta com os mesmos valores.
 - Cada card tem uma lixeira 🗑, e "🗑 Limpar tudo" apaga todos depois de um segundo toque.

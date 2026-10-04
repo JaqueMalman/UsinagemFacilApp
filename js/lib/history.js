@@ -1,5 +1,5 @@
 // Favoritos e histórico recente, salvos só no aparelho (localStorage).
-const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1', milling: 'uf_milling_history_v1' };
+const K = { fav: 'uf_thread_favorites_v1', recentT: 'uf_recent_threads_v1', recentC: 'uf_recent_calcs_v1', milling: 'uf_milling_history_v1', feed: 'uf_feed_history_v1' };
 const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; } };
 const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const key = t => `${t.tipo}|${t.passo}`;
@@ -34,22 +34,31 @@ export function addRecentThread(t) {
   write(K.recentT, a.slice(0, 8));
 }
 
+export function removeRecentCalc(href) { write(K.recentC, read(K.recentC).filter(x => x.href !== href)); }
+export function clearRecentCalcs() { write(K.recentC, []); }
+
 export function addRecentCalc(c) {
   const a = read(K.recentC).filter(x => x.href !== c.href);
   a.unshift({ ...c, at: Date.now() });
   write(K.recentC, a.slice(0, 6));
 }
 
-// Últimos cálculos do fresamento: { mode, inputs: { campo: texto digitado }, result, at }.
-// O mesmo cálculo repetido sobe para o topo em vez de duplicar.
-export const millingCalcs = () => read(K.milling);
+// Últimos cálculos de uma calculadora: { mode, inputs: { campo: texto digitado }, result, at }.
+// Guarda os 5 mais novos; o mesmo cálculo repetido sobe para o topo em vez de duplicar.
 const sameCalc = (a, b) => a.mode === b.mode && JSON.stringify(a.inputs) === JSON.stringify(b.inputs);
 
-export function addMillingCalc(c) {
-  const a = read(K.milling).filter(x => !sameCalc(x, c));
-  a.unshift({ mode: c.mode, inputs: c.inputs, result: c.result, at: Date.now() });
-  write(K.milling, a.slice(0, 5));
+function calcHistory(k) {
+  return {
+    list: () => read(k),
+    add(c) {
+      const a = read(k).filter(x => !sameCalc(x, c));
+      a.unshift({ mode: c.mode, inputs: c.inputs, result: c.result, at: Date.now() });
+      write(k, a.slice(0, 5));
+    },
+    remove(at) { write(k, read(k).filter(x => x.at !== at)); },
+    clear() { write(k, []); }
+  };
 }
 
-export function removeMillingCalc(at) { write(K.milling, read(K.milling).filter(x => x.at !== at)); }
-export function clearMillingCalcs() { write(K.milling, []); }
+export const millingHistory = calcHistory(K.milling);
+export const feedHistory = calcHistory(K.feed);

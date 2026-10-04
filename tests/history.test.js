@@ -54,14 +54,29 @@ test('cálculos recentes limitados a 6, sem repetir o mesmo link', () => {
 
 test('cálculos do fresamento: 5 últimos, sem repetir, excluir um e limpar', () => {
   const calc = vc => ({ mode: 'rpm', inputs: { vc: String(vc), dc: '10' }, result: 'x' });
-  for (let i = 1; i <= 7; i++) history.addMillingCalc(calc(i));
-  assert.deepEqual(history.millingCalcs().map(c => c.inputs.vc), ['7', '6', '5', '4', '3']);
-  history.addMillingCalc(calc(5));
-  assert.deepEqual(history.millingCalcs().map(c => c.inputs.vc), ['5', '7', '6', '4', '3']);
-  history.removeMillingCalc(history.millingCalcs()[1].at);
-  assert.equal(history.millingCalcs().some(c => c.inputs.vc === '7'), false);
-  history.clearMillingCalcs();
-  assert.deepEqual(history.millingCalcs(), []);
+  for (let i = 1; i <= 7; i++) history.millingHistory.add(calc(i));
+  assert.deepEqual(history.millingHistory.list().map(c => c.inputs.vc), ['7', '6', '5', '4', '3']);
+  history.millingHistory.add(calc(5));
+  assert.deepEqual(history.millingHistory.list().map(c => c.inputs.vc), ['5', '7', '6', '4', '3']);
+  history.millingHistory.remove(history.millingHistory.list()[1].at);
+  assert.equal(history.millingHistory.list().some(c => c.inputs.vc === '7'), false);
+  history.millingHistory.clear();
+  assert.deepEqual(history.millingHistory.list(), []);
+});
+
+test('avanço de fresamento tem histórico separado do fresamento', () => {
+  history.millingHistory.add({ mode: 'rpm', inputs: { vc: '100', dc: '10' }, result: '3.183' });
+  history.feedHistory.add({ mode: 'vf', inputs: { z: '4', rpm: '3000', fz: '0,1' }, result: '1.200' });
+  assert.equal(history.millingHistory.list().length, 1);
+  assert.deepEqual(history.feedHistory.list().map(c => c.result), ['1.200']);
+});
+
+test('removeRecentCalc e clearRecentCalcs', () => {
+  history.addRecentCalc({ href: 'a.html', label: 'A' }); history.addRecentCalc({ href: 'b.html', label: 'B' });
+  history.removeRecentCalc('a.html');
+  assert.deepEqual(history.recentCalcs().map(c => c.href), ['b.html']);
+  history.clearRecentCalcs();
+  assert.deepEqual(history.recentCalcs(), []);
 });
 
 test('localStorage corrompido não quebra a leitura', () => {
