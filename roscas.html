@@ -27,15 +27,10 @@
 <div class="search-box"><span>⌕</span><input aria-label="Pesquisar rosca" autocomplete="off" id="threadSearch" placeholder="Ex.: M10 x 1,5" type="search"/><button aria-label="Limpar" id="clearThread" type="button">×</button></div>
 <div aria-live="polite" class="search-feedback" id="threadFeedback"></div>
 </section>
-<section class="section saved-threads" hidden="" id="savedThreads">
-<div class="section-heading"><h2>⭐ Favoritos e recentes</h2><button class="saved-clear" id="clearSaved" type="button">🗑 Limpar tudo</button></div>
-<p class="saved-hint">⭐ favoritas e 🕘 vistas recentemente. Ficam só neste aparelho. Toque na 🗑 para tirar uma.</p>
-<div class="saved-chip-list" id="savedThreadList"></div>
-</section>
-<section class="section">
+<section class="section thread-step" id="stepTypes">
 <div class="section-heading"><h2>1. Escolha o tipo de rosca</h2><span>Toque em uma opção</span></div>
 <div class="thread-types" id="threadTypes">
-<button class="thread-type active" data-filter="M Rosca ISO Métrica Grossa 60°" type="button" aria-pressed="true"><span class="thread-badge">M</span><span><b>Métrica grossa</b><small>Rosca ISO métrica • 60°</small></span></button>
+<button class="thread-type" data-filter="M Rosca ISO Métrica Grossa 60°" type="button" aria-pressed="false"><span class="thread-badge">M</span><span><b>Métrica grossa</b><small>Rosca ISO métrica • 60°</small></span></button>
 <button class="thread-type" data-filter="M Rosca ISO Métrica Fina" type="button" aria-pressed="false"><span class="thread-badge">M</span><span><b>Métrica fina</b><small>Passos menores</small></span></button>
 <button class="thread-type" data-filter="Rosca UNC / Grossa 60°" type="button" aria-pressed="false"><span class="thread-badge">UNC</span><span><b>UNC</b><small>Polegada • rosca grossa • 60°</small></span></button>
 <button class="thread-type" data-filter="Rosca UNF / Fina 60°" type="button" aria-pressed="false"><span class="thread-badge">UNF</span><span><b>UNF</b><small>Estrutura pronta • brocas pendentes</small></span></button>
@@ -44,8 +39,10 @@
 <button class="thread-type" data-filter="Rosca NPT / Cônica 60°" type="button" aria-pressed="false"><span class="thread-badge">NPT</span><span><b>NPT</b><small>Preparada para validação manual</small></span></button>
 </div>
 </section>
-<section class="section thread-results-section">
+<section class="section thread-step thread-results-section" hidden="" id="stepSizes">
+<button class="step-back" id="stepBack" type="button">‹ Voltar aos tipos</button>
 <div class="section-heading"><h2>2. Escolha a medida</h2><span id="resultCount"></span></div>
+<p class="step-chosen" id="stepChosen"></p>
 <div class="thread-results" id="threadResults"></div>
 <div class="empty-state" hidden="" id="emptyThread"><b>Nenhuma medida encontrada.</b><p>Confira a digitação ou escolha outro tipo de rosca.</p></div>
 </section>

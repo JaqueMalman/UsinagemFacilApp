@@ -3,46 +3,7 @@ import assert from 'node:assert/strict';
 import { installLocalStorage } from './helpers.js';
 import * as history from '../js/lib/history.js';
 
-const m8 = { tipo: 'M Rosca ISO Métrica Grossa 60°', passo: '8x1,25', broca: '6,75' };
-const m10 = { tipo: 'M Rosca ISO Métrica Grossa 60°', passo: '10x1,50', broca: '8,50' };
-
 beforeEach(() => installLocalStorage());
-
-test('toggleFavorite liga e desliga', () => {
-  assert.equal(history.isFavorite(m8), false);
-  assert.equal(history.toggleFavorite(m8), true);
-  assert.equal(history.isFavorite(m8), true);
-  assert.equal(history.toggleFavorite(m8), false);
-  assert.deepEqual(history.favorites(), []);
-});
-
-test('favoritos ficam limitados a 20, mais recente primeiro', () => {
-  for (let i = 0; i < 25; i++) history.toggleFavorite({ tipo: 'T', passo: String(i) });
-  const fav = history.favorites();
-  assert.equal(fav.length, 20);
-  assert.equal(fav[0].passo, '24');
-});
-
-test('roscas recentes sem duplicatas e limitadas a 8', () => {
-  history.addRecentThread(m8); history.addRecentThread(m10); history.addRecentThread(m8);
-  assert.deepEqual(history.recentThreads().map(r => r.passo), ['8x1,25', '10x1,50']);
-  for (let i = 0; i < 10; i++) history.addRecentThread({ tipo: 'T', passo: String(i) });
-  assert.equal(history.recentThreads().length, 8);
-});
-
-test('removeRecentThread tira só a rosca escolhida', () => {
-  history.addRecentThread(m8); history.addRecentThread(m10);
-  history.removeRecentThread(m8);
-  assert.deepEqual(history.recentThreads().map(r => r.passo), ['10x1,50']);
-});
-
-test('clearThreads apaga favoritos e recentes, mas não os cálculos', () => {
-  history.toggleFavorite(m8); history.addRecentThread(m10); history.addRecentCalc({ href: 'a.html', label: 'A' });
-  history.clearThreads();
-  assert.deepEqual(history.favorites(), []);
-  assert.deepEqual(history.recentThreads(), []);
-  assert.equal(history.recentCalcs().length, 1);
-});
 
 test('cálculos recentes limitados a 6, sem repetir o mesmo link', () => {
   history.addRecentCalc({ href: 'a.html', label: 'A' });
@@ -80,18 +41,16 @@ test('removeRecentCalc e clearRecentCalcs', () => {
 });
 
 test('localStorage corrompido não quebra a leitura', () => {
-  localStorage.setItem('uf_thread_favorites_v1', '{quebrado');
-  assert.deepEqual(history.favorites(), []);
+  localStorage.setItem('uf_recent_calcs_v1', '{quebrado');
+  assert.deepEqual(history.recentCalcs(), []);
 });
 
 test('armazenamento com formato errado não quebra e descarta registros inválidos', () => {
-  for (const k of ['uf_thread_favorites_v1', 'uf_recent_threads_v1', 'uf_recent_calcs_v1', 'uf_milling_history_v1']) localStorage.setItem(k, '{}');
-  assert.equal(history.toggleFavorite(m8), true);
-  assert.doesNotThrow(() => history.addRecentThread(m8));
+  for (const k of ['uf_recent_calcs_v1', 'uf_milling_history_v1']) localStorage.setItem(k, '{}');
   assert.doesNotThrow(() => history.addRecentCalc({ href: 'a.html', label: 'A' }));
   assert.doesNotThrow(() => history.millingHistory.add({ mode: 'rpm', inputs: { vc: '100' }, result: '1', at: 1 }));
   localStorage.setItem('uf_milling_history_v1', JSON.stringify([null, 5, { mode: 'rpm' }, { mode: 'rpm', inputs: { vc: '<b>' , dc: 3 }, result: '1', at: 1 }, { mode: 'rpm', inputs: { vc: '100' }, result: '1', at: 2 }]));
   assert.deepEqual(history.millingHistory.list().map(c => c.at), [2]);
-  localStorage.setItem('uf_thread_favorites_v1', JSON.stringify([{ tipo: 'M' }, m8]));
-  assert.deepEqual(history.favorites().map(f => f.passo), ['8x1,25']);
+  localStorage.setItem('uf_recent_calcs_v1', JSON.stringify([{ href: 'a.html' }, { href: 'b.html', label: 'B' }]));
+  assert.deepEqual(history.recentCalcs().map(c => c.href), ['b.html']);
 });
