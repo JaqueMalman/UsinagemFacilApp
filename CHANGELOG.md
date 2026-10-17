@@ -2,6 +2,12 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.34 — Sugestões de usuários
+- Avanço por faca: o ícone de dente (🦷) foi trocado pela sigla FZ no Fresamento, nos atalhos de Calculadoras e em Aprender.
+- Roscas em etapas: tocar no tipo já mostra as medidas no lugar dos tipos, sem rolar a tela; "‹ Voltar aos tipos" (ou o voltar do celular) retorna em um toque. Quem volta do detalhe da rosca reencontra a lista de medidas. A busca mostra o resultado direto na etapa 2.
+- Roscas: saem os favoritos (estrela) e as roscas consultadas recentemente. Os favoritos e recentes já salvos no aparelho deixam de aparecer.
+- Cache PWA v1.34.
+
 ## v1.33 — Correções da revisão de código
 - Modo offline volta a servir a cópia da versão instalada: página, CSS e scripts são sempre da mesma versão, e a versão nova entra inteira ao tocar em "Atualizar agora". Mantidas as correções da v1.26 (download direto do servidor na instalação) e páginas com parâmetros no endereço (ex.: `?passo=`, `?refazer=`) ocupam uma só cópia. Substitui a busca "rede primeiro" da v1.27.
 - Histórico e favoritos: armazenamento com formato errado não quebra mais a página; registros inválidos são descartados.
