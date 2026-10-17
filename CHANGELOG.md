@@ -2,6 +2,11 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.35 — Correções de texto
+- Avanço por faca escrito sempre como Fz (F maiúsculo, z minúsculo): ícones de Fresamento, Calculadoras e Aprender, explicações de Aprender, calculadora guiada de avanço e fórmula do Fresamento.
+- Velocidade de corte representada por Vc (V maiúsculo, c minúsculo) no lugar do carrinho de corrida (🏎️): Fresamento, Torneamento, Calculadoras e Aprender. Em Aprender, o desenho "CUT → → →" vira "Vc → → →".
+- Cache PWA v1.35.
+
 ## v1.34 — Sugestões de usuários
 - Avanço por faca: o ícone de dente (🦷) foi trocado pela sigla FZ no Fresamento, nos atalhos de Calculadoras e em Aprender.
 - Roscas em etapas: tocar no tipo já mostra as medidas no lugar dos tipos, sem rolar a tela; "‹ Voltar aos tipos" (ou o voltar do celular) retorna em um toque. Quem volta do detalhe da rosca reencontra a lista de medidas. A busca mostra o resultado direto na etapa 2.
