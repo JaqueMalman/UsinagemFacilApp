@@ -18,7 +18,7 @@ export const millingDefs = {
   fz: {
     title:'Descobrir avanço por faca', intro:'Informe avanço por minuto, RPM e número de facas.',
     fields:[['vf','Avanço por minuto','mm/min','Ex.: 1000'],['n','Rotação','RPM','Ex.: 3000'],['z','Número de facas','facas','Ex.: 4']],
-    result:'Avanço por faca', unit:'mm/faca', formula:'fz = vf ÷ (n × z)',
+    result:'Avanço por faca', unit:'mm/faca', formula:'Fz = vf ÷ (n × z)',
     calc:v => feedPerTooth(v.vf, v.n, v.z), decimals:3, integerFields:['z']
   },
   vc: {
