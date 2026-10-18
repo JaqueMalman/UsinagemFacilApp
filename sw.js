@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'usinagem-facil-static-';
-const CACHE_NAME = `${CACHE_PREFIX}v1.35`;
+const CACHE_NAME = `${CACHE_PREFIX}v1.36`;
 
 const STATIC_FILES = [
   './',
@@ -27,7 +27,9 @@ const STATIC_FILES = [
   './js/lib/history.js',
   './js/lib/milling-calcs.js',
   './js/lib/numbers.js',
+  './js/lib/result-summary.js',
   './js/lib/safety.js',
+  './js/lib/share.js',
   './js/lib/text.js',
   './js/lib/threads.js',
   './js/pages/aprender.js',

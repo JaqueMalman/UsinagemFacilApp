@@ -1,5 +1,8 @@
 import { createCalculator } from '../lib/calculator.js';
 import { rpm, cuttingSpeed, feedPerMinute } from '../lib/formulas.js';
+import { setupResultSummary } from '../lib/result-summary.js';
+
+const updateSummary = setupResultSummary(document.querySelector('#resultSummary'), 'uf_summary_torneamento');
 
 createCalculator({
   defs: {
@@ -34,7 +37,9 @@ createCalculator({
   optionButtons: [...document.querySelectorAll('.turning-option')],
   ids: { input: id => 'turn-' + id, button: 'doTurningCalc', result: 'turningResult', error: 'turningError', alert: 'turningSafetyAlert' },
   classes: { badge: 'turning-badge', button: 'turning-calc-btn', result: 'turning-result' },
-  formulaLabels: { show: 'ⓘ Ver como é calculado' }
+  formulaLabels: { show: 'ⓘ Ver como é calculado' },
+  shareTitle: 'Torneamento',
+  onCalculate: updateSummary
 });
 
 document.querySelector('#diameterHelp').onclick = () => {

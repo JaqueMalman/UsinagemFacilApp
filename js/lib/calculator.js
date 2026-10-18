@@ -2,6 +2,7 @@
 // Cada modo em `defs` descreve campos, fórmula e formatação do resultado.
 import { parseNumberBR, formatNumber } from './numbers.js';
 import { rpmMessage, renderAlert } from './safety.js';
+import { setupShare, calcText } from './share.js';
 
 const FORMULA_LABELS = { show: 'ⓘ Ver como foi calculado', hide: 'ⓘ Ocultar fórmula' };
 
@@ -31,14 +32,16 @@ export function solve(def, raw) {
  * @param {object} o.ids             ids gerados: input(id), button, result, error, alert
  * @param {object} [o.classes]       classes extras de estilo: badge, button, result
  * @param {object} [o.formulaLabels] textos do botão da fórmula: show, hide
- * @param {Function} [o.onCalculate] chamado a cada cálculo válido com { mode, inputs, result }
+ * @param {string} o.shareTitle     nome da calculadora no texto copiado/enviado (ex.: 'Fresamento')
+ * @param {Function} [o.onCalculate] chamado a cada cálculo válido com { mode, inputs, result, value, rpm }
  * @returns {{ load(entry): void }} load abre um cálculo salvo: troca o modo, preenche e calcula
  */
-export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {}, formulaLabels = {}, onCalculate }) {
+export function createCalculator({ defs, panel, formulaBox, formulaToggle, optionButtons, ids, classes = {}, formulaLabels = {}, shareTitle, onCalculate }) {
   const labels = { ...FORMULA_LABELS, ...formulaLabels };
   const requested = new URLSearchParams(location.search).get('calc');
   let mode = requested && defs[requested] ? requested : Object.keys(defs)[0];
   const byId = id => document.getElementById(id);
+  let share;
 
   function setResult(text) {
     const box = byId(ids.result);
@@ -59,7 +62,9 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
     const result = error ? null : formatNumber(value, d.decimals, d.decimals);
     setResult(result);
     renderAlert(byId(ids.alert), error ? null : rpmMessage(rpm));
-    if (!error && onCalculate) onCalculate({ mode, inputs: raw, result });
+    if (error) { share.hide(); return; }
+    share.show(calcText(`${shareTitle} · ${d.title}`, d.fields.map(([id, label, unit]) => `${label}: ${raw[id].trim()} ${unit}`), `${result} ${d.unit}`));
+    if (onCalculate) onCalculate({ mode, inputs: raw, result, value, rpm });
   }
 
   function render() {
@@ -72,7 +77,9 @@ export function createCalculator({ defs, panel, formulaBox, formulaToggle, optio
       </div>
       <button class="big-calc-btn${cls(classes.button)}" id="${ids.button}" type="button">🧮 CALCULAR</button>
       <div aria-live="polite" aria-atomic="true" class="big-result${cls(classes.result)} empty" id="${ids.result}"><small>${d.result}</small><strong>—</strong><span>${d.unit}</span>${d.hint ? `<p>${d.hint}</p>` : ''}</div>
+      <div class="share-actions" id="${ids.result}Share" hidden></div>
       <div class="calc-error" id="${ids.error}" role="alert"></div><div class="safety-slot" id="${ids.alert}" hidden></div>`;
+    share = setupShare(byId(ids.result + 'Share'));
     formulaBox.innerHTML = `<b>Fórmula da tabela técnica</b><p>${d.formula}</p><small>π = 3,1416</small>`;
     formulaBox.hidden = true;
     formulaToggle.textContent = labels.show;

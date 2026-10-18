@@ -4,6 +4,7 @@ import { rpmMessage, renderAlert } from '../lib/safety.js';
 import { feedHistory } from '../lib/history.js';
 import { setupCalcHistory } from '../lib/calc-history.js';
 import { describeFeedCalc } from '../lib/milling-calcs.js';
+import { setupShare, calcText } from '../lib/share.js';
 
 let z = 4;
 const picker = document.querySelector('#teethPicker');
@@ -14,6 +15,7 @@ const error = document.querySelector('#feedError');
 const alertSlot = document.querySelector('#feedSafetyAlert');
 const formula = document.querySelector('#feedFormula');
 const toggle = document.querySelector('#toggleFeedFormula');
+const share = setupShare(document.querySelector('#feedShare'));
 
 function setTeeth(n) {
   z = n;
@@ -32,14 +34,14 @@ function calculate() {
     error.textContent = 'Preencha RPM e avanço por faca com valores maiores que zero.';
     result.classList.add('empty'); result.querySelector('strong').textContent = '—';
     summary.textContent = 'Preencha os dados acima.';
-    renderAlert(alertSlot, null);
+    renderAlert(alertSlot, null); share.hide();
     return;
   }
   const value = feedFromTooth(n, z, fz);
   if (!Number.isFinite(value)) {
     error.textContent = 'Não foi possível calcular. Confira os valores.';
     result.classList.add('empty'); result.querySelector('strong').textContent = '—';
-    renderAlert(alertSlot, null);
+    renderAlert(alertSlot, null); share.hide();
     return;
   }
   error.textContent = ''; result.classList.remove('empty');
@@ -47,6 +49,7 @@ function calculate() {
   const vf = formatNumber(value, 0);
   result.querySelector('strong').textContent = vf;
   summary.textContent = `Cálculo: ${formatNumber(n)} RPM × ${z} facas × ${formatNumber(fz)} mm/faca.`;
+  share.show(calcText('Avanço de fresamento', [`Número de facas: ${z}`, `Rotação: ${formatNumber(n)} RPM`, `Avanço por faca (Fz): ${formatNumber(fz)} mm/faca`], `${vf} mm/min`));
   result.scrollIntoView({ behavior: 'smooth', block: 'center' });
   feedHistory.add({ mode: 'vf', inputs: { z: String(z), rpm: rpmText, fz: fzText }, result: vf });
   refreshHistory();

@@ -69,6 +69,17 @@ const pages = {
     log('fresamento', 'fz com 0,5 faca', await run('fz', {vf:'1000', n:'3000', z:'0,5'}) + ` | campo z inválido: ${$('#z').getAttribute('aria-invalid')}`);
     await click('.milling-option[data-calc="rpm"]'); $('#vc').value = '100'; $('#dc').value = '10'; await key('#dc', 'Enter');
     log('fresamento', 'Enter calcula', `${text('#result strong')} | pressionado: ${$$('.milling-option[aria-pressed="true"]').map(b => b.dataset.calc).join(',')}`);
+    const shareText = box => decodeURIComponent($(box + ' a').href.split('text=')[1]).replace(/\n/g, ' / ');
+    log('fresamento', 'compartilhar', `visível: ${!$('#resultShare').hidden} | ${text('#resultShare button')} | ${shareText('#resultShare')}`);
+    log('fresamento', 'resumo após RPM', `${text('#resultSummary strong')} | ${text('#resultSummary p')}`);
+    await run('vf', {n:'3.183', f:'0,1'});
+    log('fresamento', 'resumo após avanço', `${text('#resultSummary strong')} | ${text('#resultSummary p')}`);
+    await run('rpm', {vc:'200', dc:'10'});
+    log('fresamento', 'resumo após novo RPM', `${text('#resultSummary strong')} | ${text('#resultSummary p')}`);
+    await run('rpm', {vc:'abc', dc:'10'});
+    log('fresamento', 'compartilhar com erro', `visível: ${!$('#resultShare').hidden}`);
+    await click('#resultSummary button');
+    log('fresamento', 'resumo limpar', `visível: ${!$('#resultSummary').hidden}`);
     log('fresamento', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | visível: ${!$('#calcHistory').hidden}`);
     await click('.calc-history-item:nth-child(2) .calc-history-open');
     log('fresamento', 'refazer do histórico', `${$('.milling-option.active')?.dataset.calc} | ${text('#result strong')} | 1º: ${text('.calc-history-open b')}`);
@@ -89,6 +100,8 @@ const pages = {
     log('torneamento', 'rpm 150/5 (alerta)', await run('rpm', {vc:'150', d:'5'}));
     log('torneamento', 'vf 955/0,2', await run('vf', {n:'955', f:'0,2'}));
     log('torneamento', 'vc 50/955', await run('vc', {d:'50', n:'955'}));
+    log('torneamento', 'resumo', `${text('#resultSummary strong')} | ${text('#resultSummary p')}`);
+    log('torneamento', 'compartilhar', decodeURIComponent($('#turningResultShare a').href.split('text=')[1]).replace(/\n/g, ' / '));
     $('#turn-d').value = ''; await click('#doTurningCalc');
     log('torneamento', 'inválido após resultado', `${text('#turningResult strong')} | erro: ${text('#turningError')}`);
     log('torneamento', 'botão fórmula', text('#toggleTurningFormula'));
@@ -102,12 +115,13 @@ const pages = {
   async 'avanco-fresamento.html'(){
     $('#rpm').value = '3000'; $('#fz').value = '0,1'; await click('#calculateFeed');
     log('avanco', 'z=4 padrão', `${text('#feedResult strong')} | ${text('#feedSummary')}`);
+    log('avanco', 'compartilhar', `visível: ${!$('#feedShare').hidden} | ${decodeURIComponent($('#feedShare a').href.split('text=')[1]).replace(/\n/g, ' / ')}`);
     await click('#teethPicker button[data-z="2"]'); await click('#calculateFeed');
     log('avanco', 'z=2', text('#feedResult strong'));
     $('#rpm').value = '7000'; await click('#calculateFeed');
     log('avanco', 'alerta rpm', text('#feedSafetyAlert strong'));
     $('#fz').value = ''; await click('#calculateFeed');
-    log('avanco', 'inválido', `${text('#feedResult strong')} | ${text('#feedError')} | ${text('#feedSummary')}`);
+    log('avanco', 'inválido', `${text('#feedResult strong')} | ${text('#feedError')} | ${text('#feedSummary')} | compartilhar visível: ${!$('#feedShare').hidden}`);
     log('avanco', 'histórico', `${$$('.calc-history-open b').map(b => b.textContent).join(', ')} | 1º: ${text('.calc-history-open span')}`);
     await click('.calc-history-item:nth-child(2) .calc-history-open');
     log('avanco', 'refazer do histórico', `${$('#teethPicker .active')?.dataset.z} facas | ${$('#rpm').value} RPM | ${text('#feedResult strong')}`);

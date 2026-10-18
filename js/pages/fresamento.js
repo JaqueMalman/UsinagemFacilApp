@@ -2,6 +2,9 @@ import { createCalculator } from '../lib/calculator.js';
 import { millingDefs as defs, describeMillingCalc } from '../lib/milling-calcs.js';
 import { millingHistory } from '../lib/history.js';
 import { setupCalcHistory } from '../lib/calc-history.js';
+import { setupResultSummary } from '../lib/result-summary.js';
+
+const updateSummary = setupResultSummary(document.querySelector('#resultSummary'), 'uf_summary_fresamento');
 
 const calculator = createCalculator({
   defs,
@@ -11,7 +14,8 @@ const calculator = createCalculator({
   optionButtons: [...document.querySelectorAll('.milling-option')],
   ids: { input: id => id, button: 'doCalc', result: 'result', error: 'calcError', alert: 'safetyAlert' },
   formulaLabels: { show: 'ⓘ Ver como é calculado' },
-  onCalculate: entry => { millingHistory.add(entry); refreshHistory(); }
+  shareTitle: 'Fresamento',
+  onCalculate: entry => { millingHistory.add(entry); refreshHistory(); updateSummary(entry); }
 });
 
 const refreshHistory = setupCalcHistory({

@@ -2,6 +2,12 @@
 
 A versão acompanha o nome do cache do PWA em `sw.js` (`usinagem-facil-static-vX`).
 
+## v1.36 — Compartilhar e resumo do resultado
+- Fresamento, Torneamento e Avanço por faca: botões "📋 Copiar" e "💬 WhatsApp" embaixo do resultado. O texto leva a calculadora, os valores informados e o resultado. Somem quando o cálculo dá erro.
+- Fresamento e Torneamento: barra "Seu resultado" fixa no topo, juntando o último RPM e o último avanço por minuto calculados (ex.: 3.183 RPM · 318 mm/min). O avanço só aparece se foi calculado com a mesma rotação: se o RPM mudar, o avanço antigo sai e a barra pede para calcular de novo. "↺ Limpar" zera a barra; ela dura enquanto a aba estiver aberta.
+- Novos módulos `js/lib/share.js` e `js/lib/result-summary.js`, com testes em `tests/share-summary.test.js`.
+- Cache PWA v1.36.
+
 ## v1.35 — Correções de texto
 - Avanço por faca escrito sempre como Fz (F maiúsculo, z minúsculo): ícones de Fresamento, Calculadoras e Aprender, explicações de Aprender, calculadora guiada de avanço e fórmula do Fresamento.
 - Velocidade de corte representada por Vc (V maiúsculo, c minúsculo) no lugar do carrinho de corrida (🏎️): Fresamento, Torneamento, Calculadoras e Aprender. Em Aprender, o desenho "CUT → → →" vira "Vc → → →".
